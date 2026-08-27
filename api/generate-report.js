@@ -9,6 +9,7 @@ module.exports = async (req, res) => {
     return;
   }
 
+  if (req.method === 'GET') { const key = process.env.OPENROUTER_API_KEY; res.status(200).json({ keyFound: !!key, keyStartsWith: key ? key.slice(0, 7) : null, keyLength: key ? key.length : 0 }); return; }
   if (req.method !== 'POST') {
     res.status(405).json({ success: false, error: 'Method not allowed' });
     return;
