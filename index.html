@@ -2535,11 +2535,13 @@
         (arr || []).forEach(a => {
           const action = a && typeof a === 'object' ? stripTags(a.action) : stripTags(a);
           const why = a && typeof a === 'object' ? stripTags(a.why) : '';
-          doc.setFont('helvetica', 'bold');
-          const actionLines = doc.splitTextToSize(action, CONTENT_W - 6);
-          ensureSpace(actionLines.length * 5 + (why ? 5 : 0) + 3);
+          // Le calcul du retour à la ligne (splitTextToSize) doit utiliser la
+          // MÊME police/taille que celle utilisée pour dessiner le texte,
+          // sinon la largeur calculée est fausse et le texte déborde de la page.
           doc.setFont('helvetica', 'bold');
           doc.setFontSize(10);
+          const actionLines = doc.splitTextToSize(action, CONTENT_W - 6);
+          ensureSpace(actionLines.length * 5 + (why ? 5 : 0) + 3);
           doc.setTextColor(...GOLD);
           doc.text('-', MARGIN, y);
           doc.setTextColor(30, 30, 30);
@@ -2550,8 +2552,8 @@
           if (why) {
             doc.setFont('helvetica', 'italic');
             doc.setFontSize(8.5);
-            doc.setTextColor(...MID);
             const whyLines = doc.splitTextToSize(why, CONTENT_W - 6);
+            doc.setTextColor(...MID);
             whyLines.forEach(l => { doc.text(l, MARGIN + 5, y); y += 4.2; });
           }
           y += 3;
