@@ -9,19 +9,24 @@ module.exports = async (req, res) => {
     return;
   }
 
-  if (req.method === 'GET') { const key = process.env.OPENROUTER_API_KEY; res.status(200).json({ keyFound: !!key, keyStartsWith: key ? key.slice(0, 7) : null, keyLength: key ? key.length : 0 }); return; }
   if (req.method !== 'POST') {
     res.status(405).json({ success: false, error: 'Method not allowed' });
     return;
   }
 
   try {
-    const { nA, nB, sA, sB, feA, feB, factorDetails } = req.body || {};
+    const { nA, nB, sA, sB, feA, feB, factorDetails, circleGroups, topStrengths } = req.body || {};
 
     // ---- 1) Build the coaching prompt server-side ----
     const factorLines = (factorDetails || []).map(f =>
       `  - ${f.name} [${f.cat}]: ${nA} ${f.a}% / ${nB} ${f.b}% → Edge: ${f.edge}`
     ).join('\n');
+
+    const listCircle = (list) => (list || []).map(f => `${f.name} (${nA} ${f.a}% / ${nB} ${f.b}%)`).join(', ') || 'none selected';
+    const controlList = listCircle(circleGroups && circleGroups.control);
+    const influenceList = listCircle(circleGroups && circleGroups.influence);
+    const concernList = listCircle(circleGroups && circleGroups.concern);
+    const strengthsList = (topStrengths || []).map(f => `${f.name} (${nA} ${f.a}% vs ${nB} ${f.b}%)`).join(', ') || 'no clear leading factor';
 
     const diff = Math.abs(sA - sB);
     const leader = sA > sB ? nA : sB > sA ? nB : null;
@@ -36,15 +41,19 @@ module.exports = async (req, res) => {
 
 {
   "bias": "underconfidence" or "overconfidence" or "aligned",
-  "comparison_insight": "3-4 SHORT, plain-English sentences comparing the subjective gut-feel score (${feA}%) against the calculated score (${sA}%) for ${nA}. Name explicitly whether ${nA} over-estimated or under-estimated their own power. Ground the explanation in Preparation, Alignment, and Initiative wherever relevant — these are the most workable, fastest-to-fix factors for ${nA}, so prefer referencing these over harder-to-shift factors when explaining the gap. State the concrete risk this bias creates in plain terms (e.g. conceding too early, opening too weak). Wrap the 3-5 most important words or short phrases in <strong> tags (e.g. key numbers, the bias name, the risk) so they stand out — do not bold whole sentences, only key terms.",
-  "leverage_advice": "3-4 SHORT, plain-English sentences on how ${nA} should reinforce their strengths. Prioritise Preparation, Alignment, and Initiative first if ${nA} holds any edge on them — call these out as the most workable, immediately actionable levers. Only after that, briefly mention one other strong factor if relevant. Give one concrete, simple action per factor, not abstract advice. Wrap the 3-5 most important words or phrases in <strong> tags so they stand out — do not bold whole sentences, only key terms.",
-  "short_term_actions": [
-    { "action": "one short, plain-English, concrete action nA can take immediately/this week — written simply, no jargon", "why": "one short sentence explaining why, tied to a specific factor" }
-    // 4-5 of these objects. Preparation, Alignment, and Initiative are the most workable short-term levers — prioritise actions tied to these three factors first, then fill remaining slots with other factors where nA is behind nB
+  "comparison_insight": "3-4 SHORT, plain-English sentences comparing the subjective gut-feel score (${feA}%) against the calculated score (${sA}%) for ${nA}. Name explicitly whether ${nA} over-estimated or under-estimated their own power. State the concrete risk this bias creates in plain terms (e.g. conceding too early, opening too weak). Wrap the 3-5 most important words or short phrases in <strong> tags so they stand out — do not bold whole sentences, only key terms.",
+  "strengths_advice": "3-4 SHORT, plain-English sentences on how ${nA} should reinforce and bank the strengths listed below (${strengthsList}). For each one, suggest a concrete way to make it visible to ${nB} and ask whether ${nA} could push it further (gain another 5-10%). Wrap key terms in <strong> tags.",
+  "control_actions": [
+    { "action": "one short, plain-English, immediately actionable step for nA this week", "why": "one short sentence tying it to a specific factor from the Circle of Control list below" }
+    // one object per factor in the Circle of Control list, focused on what nA can do right now — skip a factor only if nA already has a decisive lead on it
   ],
-  "long_term_actions": [
-    { "action": "one short, plain-English, concrete structural action", "why": "one short sentence on why this shifts the balance of power over time, tied to a specific factor" }
-    // 3-4 of these objects, covering structural levers that take weeks/months: BATNA development, network & influence, conditionality, competitive alternatives, relationship building
+  "influence_actions": [
+    { "action": "one short, plain-English, concrete action that builds this factor over the coming weeks/months", "why": "one short sentence tying it to a specific factor from the Circle of Influence list below" }
+    // one object per factor in the Circle of Influence list
+  ],
+  "concern_notes": [
+    { "factor": "factor name from the Circle of Concern list below", "note": "one short, plain sentence on how this factor could still affect the deal, with no actionable advice implied — these are largely outside nA's direct control" }
+    // one object per factor in the Circle of Concern list
   ]
 }
 
@@ -54,10 +63,22 @@ module.exports = async (req, res) => {
 - Power gap: ${diff} points ${leader ? `in favour of ${leader}` : '— balanced'}
 ${weakerParty ? `- Bias signal for ${nA}: ${biasDir}` : ''}
 
-## Factor breakdown (Critical > Strong > Medium > Low weight)
+## Full factor breakdown (Critical > Strong > Medium > Low weight)
 ${factorLines}
 
-Write in plain, simple English — short sentences, no jargon, no run-on explanations. Reference actual factor names from the breakdown. Preparation, Alignment, and Initiative are the most workable factors for ${nA} to act on quickly — favour these in your explanations wherever they're relevant, over harder-to-shift factors like Brand or Dependency. Coach-like, direct, no hedging, no filler. Return ONLY the JSON object, nothing else.`;
+## Circle of Control (short-term, directly actionable by nA)
+${controlList}
+
+## Circle of Influence (medium-term, can be built up over time)
+${influenceList}
+
+## Circle of Concern (long-term, largely outside nA's direct control)
+${concernList}
+
+## Top strengths for nA
+${strengthsList}
+
+Write in plain, simple English — short sentences, no jargon, no run-on explanations. Reference actual factor names throughout. Coach-like, direct, no hedging, no filler. Return ONLY the JSON object, nothing else.`;
 
     // ---- 2) Call Claude via OpenRouter, using the key stored privately as a Vercel environment variable ----
     const aiResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
@@ -71,7 +92,7 @@ Write in plain, simple English — short sentences, no jargon, no run-on explana
       },
       body: JSON.stringify({
         model: 'anthropic/claude-sonnet-4.5', // swap this slug any time — browse options at openrouter.ai/models
-        max_tokens: 2000,
+        max_tokens: 2400,
         messages: [{ role: 'user', content: prompt }],
       }),
     });
