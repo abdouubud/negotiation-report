@@ -820,6 +820,64 @@
       color: var(--color-accent-gold)
     }
 
+    .factor-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px
+    }
+
+    .factor-table th {
+      text-align: left;
+      font-size: 10.5px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      color: var(--color-mid-1);
+      padding: 0 8px 8px 0;
+      border-bottom: 1px solid var(--color-mid-2)
+    }
+
+    .factor-table th:nth-child(3),
+    .factor-table th:nth-child(4),
+    .factor-table td.ft-pct {
+      text-align: right
+    }
+
+    .factor-table td {
+      padding: 8px 8px 8px 0;
+      border-bottom: 1px solid var(--color-cream);
+      vertical-align: top;
+      color: var(--color-dark-2)
+    }
+
+    .ft-name {
+      font-weight: 600;
+      color: var(--color-dark-1);
+      max-width: 220px
+    }
+
+    .ft-def {
+      font-weight: 400;
+      font-size: 10.5px;
+      color: var(--color-mid-1);
+      margin-top: 2px;
+      line-height: 1.4
+    }
+
+    .ft-weight {
+      white-space: nowrap;
+      font-weight: 600;
+      color: var(--color-accent-gold)
+    }
+
+    .ft-pct {
+      font-weight: 600;
+      white-space: nowrap
+    }
+
+    .ft-pct.ft-win {
+      color: #1E8A4C
+    }
+
     .action-card-longterm {
       border-left: 3px solid var(--color-accent-gold)
     }
@@ -1097,8 +1155,8 @@
                 variable or function.
          =================================================================== -->
 
+      <p style="font-size:14px;color:var(--color-dark-2);line-height:1.6;margin-bottom:1rem">In our view, the balance of power in a negotiation comes down to five things: the leverage each side holds through their alternatives and how much they depend on the deal, how well-prepared and informed each side is going in, the strength and internal alignment of the people at the table, the relationships, reputation, and legal context surrounding the deal, and situational pressures like time and who takes the initiative. Here are the factors of power that we propose:</p>
 
-     
       <p style="font-size:14px;color:var(--color-dark-1);margin-bottom:1rem"><strong>A.</strong> Select the factors that
         impact the balance of power.<br><strong>B.</strong> For each factor, select the importance of that factor: it
         can be Critical, Strong, Medium, or Low.<br><strong>C.</strong>  Include any additional necessary factor.</p>
@@ -1843,7 +1901,7 @@
       <div class="ai-section">
         <div class="ai-section-title">Analysis &amp; Recommendations</div>
         <div class="ai-key-row">
-          <span class="ai-key-label">Prepared for</span>
+          <span class="ai-key-label">Prepared by</span>
           <input type="text" id="preparedByName" placeholder="Your first and last name">
         </div>
         <button class="btn-generate" id="btn-generate" onclick="triggerAI()">✦ Generate analysis</button>
@@ -2217,28 +2275,82 @@
       'Dependency': 'How much each party actually needs the other — the mutual reliance underlying the deal.',
     };
 
+    // Classe chaque facteur dans l'un des 3 "cercles" du plan d'action :
+    // - control    : court terme, directement actionnable par vous
+    // - influence  : moyen terme, se construit avec le temps
+    // - concern    : long terme, largement hors de votre contrôle direct
+    // Un facteur personnalisé (ajouté par l'utilisateur) et absent de cette
+    // liste est classé par défaut dans "influence".
+    const CIRCLE_MAP = {
+      'Preparation': 'control',
+      'Information': 'control',
+      'Team': 'control',
+      'Alignment': 'control',
+      'Initiative': 'control',
+      'BATNA': 'influence',
+      'Relationship history': 'influence',
+      'Brands': 'influence',
+      'Dependency': 'influence',
+      'Conditionality': 'influence',
+      'Resources & Expertise': 'influence',
+      'The Law': 'concern',
+      'Time': 'concern',
+      'Networks & Influence': 'concern',
+    };
+    function circleOf(name) { return CIRCLE_MAP[name] || 'influence'; }
+
+    // Ordre de tri par poids : Critical > Strong > Medium > Low
+    const WEIGHT_ORDER = { 'Critical': 0, 'Strong': 1, 'Medium': 2, 'Low': 3 };
+
     function biasLabel(bias) {
       if (bias === 'underconfidence') return 'Underconfidence';
       if (bias === 'overconfidence') return 'Overconfidence';
       return 'Aligned';
     }
 
-    function renderReportCards(data, nA, nB, feA, feB, sA, sB, factorDetails) {
+    function renderReportCards(data, nA, nB, feA, feB, sA, sB, factorDetails, circleGroups, topStrengths) {
       const items = (arr) => (arr || []).map(a => {
         if (a && typeof a === 'object') {
           return `<li><strong>${a.action}</strong>${a.why ? `<span class="action-why">${a.why}</span>` : ''}</li>`;
         }
         return `<li>${a}</li>`;
       }).join('');
-      const chips = (factorDetails || []).map(f =>
-        `<span class="report-factor-chip">${f.name} <span class="weight">${f.cat}</span></span>`
-      ).join('');
 
       const diff = Math.abs(sA - sB);
       const verdict = diff < 5
         ? 'The balance of power is roughly equal.'
         : sA > sB ? `<strong>${nA}</strong> holds a power advantage (${sA}% vs ${sB}%).`
           : `<strong>${nB}</strong> holds a power advantage (${sB}% vs ${sA}%).`;
+
+      // Tableau détaillé : Facteur | Poids | Définition | %A | %B — trié par poids,
+      // le pourcentage du camp gagnant est mis en vert.
+      const factorTableRows = (factorDetails || []).map(f => {
+        const aWins = f.a > f.b, bWins = f.b > f.a;
+        return `
+          <tr>
+            <td class="ft-name">${f.name}<div class="ft-def">${FACTOR_GLOSSARY[f.name] || ''}</div></td>
+            <td class="ft-weight">${f.cat}</td>
+            <td class="ft-pct ${aWins ? 'ft-win' : ''}">${f.a}%</td>
+            <td class="ft-pct ${bWins ? 'ft-win' : ''}">${f.b}%</td>
+          </tr>`;
+      }).join('');
+
+      const strengthsList = (topStrengths || []).map(f =>
+        `<span class="report-factor-chip">${f.name} <span class="weight">${f.a}%</span></span>`
+      ).join('');
+
+      const circleSection = (title, icon, list, cssClass) => {
+        if (!list || !list.length) return '';
+        return `
+          <div class="report-card ${cssClass}">
+            <div class="report-card-title">${icon} ${title}</div>
+            <ul class="action-list">${items(list)}</ul>
+          </div>`;
+      };
+
+      const concernList = (data.concern_notes || []).map(c =>
+        `<li><strong>${c.factor}:</strong><span class="action-why">${c.note}</span></li>`
+      ).join('');
 
       return `
         <div class="report-cards">
@@ -2248,13 +2360,6 @@
             <div class="report-card-body">Balance of power lies at the heart of every negotiation. The side that holds it sets the process and dictates the terms. Yet despite this critical stake, most negotiators don't take the time to assess the Balance of power — let alone understand how to shift it in their favor.</div>
             <div class="report-card-body" style="margin-top:8px">Misjudging the balance of power can put you at a disadvantage before the negotiation even begins. Give the other side too much power, and you may negotiate from a position of unnecessary weakness — making concessions too early, accepting unfavorable terms, or limiting your own room to maneuver. Underestimate the other side, and you may walk into the negotiation overconfident — under-prepared, opening too extreme, or failing to understand their alternatives and their BATNA.</div>
             <div class="report-card-body" style="margin-top:8px">The risk is not simply being wrong about who has more power. It is allowing a distorted perception of power to shape your strategy, your concessions, and ultimately the outcome. This report closes that gap for <strong>${nA}</strong> vs <strong>${nB}</strong>, using the factors selected below.</div>
-          </div>
-
-          <div class="report-card">
-            <div class="report-card-title">📖 Understanding the factors</div>
-            <div class="glossary-list">
-              ${(factorDetails || []).map(f => `<div class="glossary-item"><strong>${f.name}:</strong>${FACTOR_GLOSSARY[f.name] || ''}</div>`).join('')}
-            </div>
           </div>
 
           <div class="report-card">
@@ -2293,11 +2398,6 @@
             <div class="report-card-body">${verdict}</div>
           </div>
 
-          <div class="report-card">
-            <div class="report-card-title">🗂️ Factors chosen</div>
-            <div class="report-factors-list">${chips}</div>
-          </div>
-
           <div class="report-card report-card-gap">
             <div class="report-card-title">⚡ Subjective vs. objective</div>
             <div class="bias-pill">${biasLabel(data.bias)}</div>
@@ -2305,19 +2405,37 @@
           </div>
 
           <div class="report-card">
+            <div class="report-card-title">📐 Detailed analysis by factor</div>
+            <table class="factor-table">
+              <thead><tr><th>Factor</th><th>Weight</th><th>${nA}</th><th>${nB}</th></tr></thead>
+              <tbody>${factorTableRows}</tbody>
+            </table>
+          </div>
+
+          <div class="report-card report-card-intro">
+            <div class="report-card-title">🧭 Action plan</div>
+            <div class="report-card-body">What did you learn from this analysis? What's your takeaway on the balance of power? Is your team aligned with this reading? What actions can you take?</div>
+          </div>
+
+          <div class="report-card">
+            <div class="report-card-title">🤝 Alignment</div>
+            <div class="report-card-body">Share this analysis with your team — line manager, marketing, supply, finance, whoever is involved in this deal. Do they agree with the factors chosen? The same weighting? The same read on how each one splits between ${nA} and ${nB}?</div>
+          </div>
+
+          <div class="report-card">
             <div class="report-card-title">💪 Reinforce your strengths</div>
-            <div class="report-card-body">${data.leverage_advice || ''}</div>
+            <div class="report-factors-list" style="margin-bottom:10px">${strengthsList}</div>
+            <div class="report-card-body">${data.strengths_advice || ''}</div>
           </div>
 
-          <div class="report-card action-card-immediate">
-            <div class="report-card-title">🚀 Short-term actions</div>
-            <ul class="action-list">${items(data.short_term_actions)}</ul>
-          </div>
+          ${circleSection('Circle of control — short term', '🎯', data.control_actions, 'action-card-immediate')}
+          ${circleSection('Circle of influence — medium term', '🔄', data.influence_actions, 'action-card-medium')}
 
+          ${concernList ? `
           <div class="report-card action-card-longterm">
-            <div class="report-card-title">🧭 Medium & long-term actions</div>
-            <ul class="action-list">${items(data.long_term_actions)}</ul>
-          </div>
+            <div class="report-card-title">🌐 Circle of concern — long term</div>
+            <ul class="action-list">${concernList}</ul>
+          </div>` : ''}
 
         </div>`;
     }
@@ -2349,11 +2467,26 @@
         return { name: f.name, cat: CATS[f.cat].label, a, b, edge };
       });
 
+      // Trié par poids (Critical > Strong > Medium > Low) pour le tableau détaillé
+      const sortedFactorDetails = [...factorDetails].sort(
+        (x, y) => (WEIGHT_ORDER[x.cat] ?? 9) - (WEIGHT_ORDER[y.cat] ?? 9)
+      );
+
+      // Regroupement par cercle (contrôle / influence / préoccupation) pour le plan d'action
+      const circleGroups = { control: [], influence: [], concern: [] };
+      factorDetails.forEach(f => circleGroups[circleOf(f.name)].push(f));
+
+      // Les 3 facteurs où nA a le plus d'avantage, pour la section "Reinforce your strengths"
+      const topStrengths = factorDetails
+        .filter(f => f.edge === nA)
+        .sort((x, y) => (y.a - y.b) - (x.a - x.b))
+        .slice(0, 3);
+
       try {
         const response = await fetch(REPORT_WORKER_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ nA, nB, sA, sB, feA, feB, factorDetails })
+          body: JSON.stringify({ nA, nB, sA, sB, feA, feB, factorDetails, circleGroups, topStrengths })
         });
 
         const rawText = await response.text();
@@ -2369,10 +2502,10 @@
         }
 
         box.className = '';
-        box.innerHTML = renderReportCards(data.reportData, nA, nB, feA, feB, sA, sB, factorDetails);
+        box.innerHTML = renderReportCards(data.reportData, nA, nB, feA, feB, sA, sB, sortedFactorDetails, circleGroups, topStrengths);
         // Garde les données en mémoire pour générer un PDF propre à la demande,
         // sans dépendre d'une capture d'écran fragile de la mise en page stylée.
-        lastReport = { data: data.reportData, nA, nB, feA, feB, sA, sB, factorDetails };
+        lastReport = { data: data.reportData, nA, nB, feA, feB, sA, sB, factorDetails: sortedFactorDetails, circleGroups, topStrengths };
         document.getElementById('btn-download-pdf').style.display = 'inline-block';
 
       } catch (err) {
@@ -2420,9 +2553,9 @@
       const TOP_Y = HEADER_H + 6;
       const BOTTOM_LIMIT = PAGE_H - FOOTER_H;
 
-      const DARK = [20, 29, 44], MID = [124, 144, 174], GOLD = [215, 162, 74], CREAM = [243, 238, 227];
+      const DARK = [20, 29, 44], MID = [124, 144, 174], GOLD = [215, 162, 74], CREAM = [243, 238, 227], GREEN = [30, 138, 76];
 
-      const { data, nA, nB, feA, feB, sA, sB, factorDetails } = lastReport;
+      const { data, nA, nB, feA, feB, sA, sB, factorDetails, topStrengths } = lastReport;
       const preparedBy = (document.getElementById('preparedByName').value || '').trim();
       const today = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
@@ -2504,33 +2637,6 @@
         y += boxH + 6;
       }
 
-      function factorChips(list) {
-        ensureSpace(8);
-        doc.setFontSize(8.5);
-        let x = MARGIN;
-        (list || []).forEach(f => {
-          doc.setFont('helvetica', 'normal');
-          const label = `${f.name}  `;
-          const weight = f.cat;
-          const labelW = doc.getTextWidth(label);
-          doc.setFont('helvetica', 'bold');
-          const weightW = doc.getTextWidth(weight);
-          const chipW = labelW + weightW + 6;
-          if (x + chipW > PAGE_W - MARGIN) { x = MARGIN; y += 8; ensureSpace(8); }
-          doc.setDrawColor(200, 200, 200);
-          doc.setFillColor(255, 255, 255);
-          doc.roundedRect(x, y - 4.5, chipW, 6.5, 3, 3, 'FD');
-          doc.setFont('helvetica', 'normal');
-          doc.setTextColor(60, 60, 60);
-          doc.text(label, x + 2, y);
-          doc.setFont('helvetica', 'bold');
-          doc.setTextColor(...GOLD);
-          doc.text(weight, x + 2 + labelW, y);
-          x += chipW + 3;
-        });
-        y += 10;
-      }
-
       function actionItems(arr) {
         (arr || []).forEach(a => {
           const action = a && typeof a === 'object' ? stripTags(a.action) : stripTags(a);
@@ -2560,18 +2666,94 @@
         });
       }
 
+      function factorTable(list) {
+        const nameW = 66, weightW = 20, pctW = (CONTENT_W - nameW - weightW) / 2;
+        const xName = MARGIN, xWeight = MARGIN + nameW, xPctA = xWeight + weightW, xPctB = xPctA + pctW;
+
+        ensureSpace(9);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(8);
+        doc.setTextColor(...MID);
+        doc.text('FACTOR', xName, y);
+        doc.text('WEIGHT', xWeight, y);
+        doc.text(nA.toUpperCase(), xPctA + pctW - 2, y, { align: 'right' });
+        doc.text(nB.toUpperCase(), xPctB + pctW - 2, y, { align: 'right' });
+        y += 3;
+        doc.setDrawColor(210, 210, 210);
+        doc.setLineWidth(0.2);
+        doc.line(MARGIN, y, PAGE_W - MARGIN, y);
+        y += 4;
+
+        (list || []).forEach(f => {
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(7.5);
+          const defLines = doc.splitTextToSize(FACTOR_GLOSSARY[f.name] || '', nameW - 3);
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(9.5);
+          const nameLines = doc.splitTextToSize(f.name, nameW - 3);
+          const rowH = Math.max(nameLines.length * 4.2 + defLines.length * 3.2 + 2, 9);
+          ensureSpace(rowH + 3);
+
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(9.5);
+          doc.setTextColor(...DARK);
+          nameLines.forEach((l, i) => doc.text(l, xName, y + 3 + i * 4.2));
+          let subY = y + 3 + nameLines.length * 4.2;
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(7.5);
+          doc.setTextColor(...MID);
+          defLines.forEach((l, i) => doc.text(l, xName, subY + i * 3.2));
+
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(9);
+          doc.setTextColor(...GOLD);
+          doc.text(f.cat, xWeight, y + 3);
+
+          const aWin = f.a > f.b, bWin = f.b > f.a;
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(9.5);
+          doc.setTextColor(...(aWin ? GREEN : DARK));
+          doc.text(f.a + '%', xPctA + pctW - 2, y + 3, { align: 'right' });
+          doc.setTextColor(...(bWin ? GREEN : DARK));
+          doc.text(f.b + '%', xPctB + pctW - 2, y + 3, { align: 'right' });
+
+          y += rowH + 2;
+          doc.setDrawColor(240, 240, 240);
+          doc.setLineWidth(0.1);
+          doc.line(MARGIN, y - 2, PAGE_W - MARGIN, y - 2);
+        });
+        y += 4;
+      }
+
+      function concernItems(arr) {
+        (arr || []).forEach(c => {
+          const factor = stripTags(c.factor), note = stripTags(c.note);
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(10);
+          const factorLines = doc.splitTextToSize(factor, CONTENT_W - 6);
+          ensureSpace(factorLines.length * 5 + 8);
+          doc.setTextColor(...GOLD);
+          doc.text('-', MARGIN, y);
+          doc.setTextColor(30, 30, 30);
+          factorLines.forEach((l, i) => doc.text(l, MARGIN + 5, y + i * 5));
+          y += factorLines.length * 5;
+          if (note) {
+            doc.setFont('helvetica', 'italic');
+            doc.setFontSize(8.5);
+            doc.setTextColor(...MID);
+            const noteLines = doc.splitTextToSize(note, CONTENT_W - 6);
+            noteLines.forEach(l => { doc.text(l, MARGIN + 5, y); y += 4.2; });
+          }
+          y += 3;
+        });
+      }
+
       // ---- Construction du document ----
       addHeader();
 
       sectionTitle('Introduction');
       paragraph("Balance of power lies at the heart of every negotiation. The side that holds it sets the process and dictates the terms. Yet despite this critical stake, most negotiators don't take the time to assess the Balance of power — let alone understand how to shift it in their favor.");
       paragraph(`This report closes that gap for ${nA} vs ${nB}, using the factors selected below.`);
-
-      sectionTitle('Understanding the factors');
-      (factorDetails || []).forEach(f => {
-        paragraph(`${f.name}: ${FACTOR_GLOSSARY[f.name] || ''}`, { size: 9, after: 1.5, lineH: 4.4 });
-      });
-      y += 3;
 
       sectionTitle('First evaluation vs. calculated analysis');
       paragraph('FIRST EVALUATION', { bold: true, size: 8.5, color: MID, after: 1 });
@@ -2584,20 +2766,34 @@
           : `${nB} holds a power advantage (${sB}% vs ${sA}%).`;
       paragraph(verdict, { bold: true });
 
-      sectionTitle('Factors chosen');
-      factorChips(factorDetails);
-
       sectionTitle('Subjective vs. objective — ' + biasLabelPdf(data.bias));
       paragraph(data.comparison_insight || '');
 
+      sectionTitle('Detailed analysis by factor');
+      factorTable(factorDetails);
+
+      sectionTitle('Action plan');
+      paragraph("What did you learn from this analysis? What's your takeaway on the balance of power? Is your team aligned with this reading? What actions can you take?", { italic: true, color: MID });
+
+      sectionTitle('Alignment');
+      paragraph(`Share this analysis with your team — line manager, marketing, supply, finance, whoever is involved in this deal. Do they agree with the factors chosen? The same weighting? The same read on how each one splits between ${nA} and ${nB}?`);
+
       sectionTitle('Reinforce your strengths');
-      paragraph(data.leverage_advice || '');
+      if (topStrengths && topStrengths.length) {
+        paragraph(topStrengths.map(f => `${f.name} (${f.a}%)`).join('  ·  '), { bold: true, size: 9, color: GOLD, after: 2 });
+      }
+      paragraph(data.strengths_advice || '');
 
-      sectionTitle('Short-term actions');
-      actionItems(data.short_term_actions);
+      sectionTitle('Circle of control — short term');
+      actionItems(data.control_actions);
 
-      sectionTitle('Medium & long-term actions');
-      actionItems(data.long_term_actions);
+      sectionTitle('Circle of influence — medium term');
+      actionItems(data.influence_actions);
+
+      if (data.concern_notes && data.concern_notes.length) {
+        sectionTitle('Circle of concern — long term');
+        concernItems(data.concern_notes);
+      }
 
       // ---- Pied de page sur chaque page : préparé par / date à gauche, numéro à droite ----
       const totalPages = doc.internal.getNumberOfPages();
