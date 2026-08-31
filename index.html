@@ -2580,6 +2580,59 @@
         doc.line(MARGIN, HEADER_H - 2, PAGE_W - MARGIN, HEADER_H - 2);
       }
 
+      // Page de couverture (page 1) : logo, titre, "Prepared for", "Assessing
+      // between", l'image balance/seesaw, puis le texte d'introduction complet —
+      // reproduit l'intro telle qu'elle apparaît dans l'outil lui-même.
+      function addCoverPage() {
+        y = 20;
+        try {
+          const logoH = 14, logoW = logoH * (768 / 144);
+          doc.addImage(WENEGO_LOGO_BASE64, 'PNG', MARGIN, y, logoW, logoH);
+        } catch (e) { /* si le logo échoue, on continue sans bloquer le PDF */ }
+        y += 24;
+
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(18);
+        doc.setTextColor(...DARK);
+        doc.text('Negotiation Balance of Power', MARGIN, y);
+        y += 10;
+
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(10.5);
+        doc.setTextColor(...MID);
+        doc.text('Prepared for: ', MARGIN, y);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(...DARK);
+        doc.text(preparedBy || 'Not specified', MARGIN + doc.getTextWidth('Prepared for: '), y);
+        y += 6;
+
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(...MID);
+        doc.text('Assessing the balance of power between: ', MARGIN, y);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(...DARK);
+        doc.text(`${nA} and ${nB}`, MARGIN + doc.getTextWidth('Assessing the balance of power between: '), y);
+        y += 10;
+
+        // Image balance/seesaw — récupérée directement depuis l'outil (même
+        // image que sur la page 1 de l'écran), pas besoin de la dupliquer en dur.
+        try {
+          const heroImgEl = document.querySelector('img[alt="Balance of power scale"]');
+          if (heroImgEl && heroImgEl.src) {
+            const aspect = (heroImgEl.naturalWidth && heroImgEl.naturalHeight)
+              ? heroImgEl.naturalWidth / heroImgEl.naturalHeight : 1.5;
+            const imgW = CONTENT_W, imgH = imgW / aspect;
+            doc.addImage(heroImgEl.src, 'JPEG', MARGIN, y, imgW, Math.min(imgH, 70));
+            y += Math.min(imgH, 70) + 10;
+          }
+        } catch (e) { /* si l'image échoue, on continue avec le texte seul */ }
+
+        paragraph("Balance of power lies at the heart of every negotiation. The side that holds it sets the process and dictates the terms. Yet despite this critical stake, most negotiators don't take the time to assess the Balance of power — let alone understand how to shift it in their favor.");
+        paragraph("Misjudging the balance of power can put you at a disadvantage before the negotiation even begins. Give the other side too much power, and you may negotiate from a position of unnecessary weakness — making concessions too early, accepting unfavorable terms, or limiting your own room to maneuver. Underestimate the other side, and you may walk into the negotiation overconfident — under-prepared, opening too extreme, or failing to understand their alternatives and their BATNA.");
+        paragraph("The risk is not simply being wrong about who has more power. It is allowing a distorted perception of power to shape your strategy, your concessions, and ultimately the outcome.");
+        paragraph(`This report closes that gap for ${nA} vs ${nB}, using the factors selected below.`);
+      }
+
       function newPage() {
         doc.addPage();
         addHeader();
@@ -2749,12 +2802,11 @@
       }
 
       // ---- Construction du document ----
-      addHeader();
+      // Page 1 : couverture + introduction (reproduit l'intro de l'outil)
+      addCoverPage();
 
-      sectionTitle('Introduction');
-      paragraph("Balance of power lies at the heart of every negotiation. The side that holds it sets the process and dictates the terms. Yet despite this critical stake, most negotiators don't take the time to assess the Balance of power — let alone understand how to shift it in their favor.");
-      paragraph(`This report closes that gap for ${nA} vs ${nB}, using the factors selected below.`);
-
+      // Page 2 : synthèse (first eval vs calculated) + détail par facteur
+      newPage();
       sectionTitle('First evaluation vs. calculated analysis');
       paragraph('FIRST EVALUATION', { bold: true, size: 8.5, color: MID, after: 1 });
       statBoxes(nA, feA, nB, feB);
@@ -2772,6 +2824,8 @@
       sectionTitle('Detailed analysis by factor');
       factorTable(factorDetails);
 
+      // Page 3 : plan d'action, sous forme de questions/réponses puis des 3 cercles
+      newPage();
       sectionTitle('Action plan');
       paragraph("What did you learn from this analysis? What's your takeaway on the balance of power? Is your team aligned with this reading? What actions can you take?", { italic: true, color: MID });
 
