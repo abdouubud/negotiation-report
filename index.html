@@ -708,6 +708,18 @@
       color: var(--color-accent-terracotta)
     }
 
+    /* Titres majeurs numérotés (1. 2. 3.) — plus grands, bleu marine, non
+       transformés en majuscules — pour les distinguer des autres titres de
+       cartes (Introduction, Alignment, cercles, etc.) */
+    .report-card-title-major {
+      font-size: 18px;
+      font-weight: 700;
+      text-transform: none;
+      letter-spacing: 0;
+      color: var(--color-dark-1);
+      margin-bottom: 10px
+    }
+
     .report-card-body {
       font-size: 14px;
       line-height: 1.6;
@@ -2365,7 +2377,7 @@
           </div>
 
           <div class="report-card">
-            <div class="report-card-title">1. First evaluation vs. calculated analysis</div>
+            <div class="report-card-title report-card-title-major">1. First evaluation vs. calculated analysis</div>
             <div class="report-card-body" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--color-mid-1);margin-bottom:6px">First evaluation</div>
             <div class="report-stat-row">
               <div class="report-stat-box">
@@ -2401,7 +2413,7 @@
           </div>
 
           <div class="report-card">
-            <div class="report-card-title">2. Detailed analysis by factor</div>
+            <div class="report-card-title report-card-title-major">2. Detailed analysis by factor</div>
             <table class="factor-table">
               <thead><tr><th>Factor</th><th>Weight</th><th>${nA}</th><th>${nB}</th></tr></thead>
               <tbody>${factorTableRows}</tbody>
@@ -2409,7 +2421,7 @@
           </div>
 
           <div class="report-card report-card-intro">
-            <div class="report-card-title">3. Action plan</div>
+            <div class="report-card-title report-card-title-major">3. Action plan</div>
             <div class="report-card-body">What did you learn from this analysis? What's your takeaway on the balance of power? Is your team aligned with this reading? What actions can you take?</div>
           </div>
 
@@ -2673,6 +2685,21 @@
         y += 5;
       }
 
+      // Titres majeurs numérotés (1. 2. 3.) — plus grands, bleu marine, pas
+      // de majuscules forcées — pour les distinguer des autres titres.
+      function majorSectionTitle(text) {
+        ensureSpace(13);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(14);
+        doc.setTextColor(...DARK);
+        doc.text(text, MARGIN, y);
+        y += 6;
+        doc.setDrawColor(220, 220, 220);
+        doc.setLineWidth(0.15);
+        doc.line(MARGIN, y, PAGE_W - MARGIN, y);
+        y += 6;
+      }
+
       function paragraph(text, opts = {}) {
         const cleanText = stripTags(text);
         doc.setFont('helvetica', opts.bold ? 'bold' : (opts.italic ? 'italic' : 'normal'));
@@ -2912,7 +2939,7 @@
       // tout s'enchaîne naturellement ; si ça déborde, la suite continue en page 2.
       addCoverPage();
 
-      sectionTitle('1. First evaluation vs. calculated analysis');
+      majorSectionTitle('1. First evaluation vs. calculated analysis');
       paragraph('FIRST EVALUATION', { bold: true, size: 8.5, color: MID, after: 1 });
       statBoxes(nA, feA, nB, feB);
       paragraph('CALCULATED ANALYSIS', { bold: true, size: 8.5, color: MID, after: 1 });
@@ -2923,12 +2950,12 @@
           : `${nB} holds a power advantage (${sB}% vs ${sA}%).`;
       paragraph(verdict, { bold: true });
 
-      sectionTitle('2. Detailed analysis by factor');
+      majorSectionTitle('2. Detailed analysis by factor');
       factorTable(factorDetails);
 
       // Page suivante : plan d'action, sous forme de questions/réponses puis des 3 cercles
       newPage();
-      sectionTitle('3. Action plan');
+      majorSectionTitle('3. Action plan');
       paragraph("What did you learn from this analysis? What's your takeaway on the balance of power? Is your team aligned with this reading? What actions can you take?", { italic: true, color: MID });
 
       sectionTitle('a. Alignment');
