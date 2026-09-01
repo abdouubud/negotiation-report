@@ -2329,7 +2329,7 @@
         const aWins = f.a > f.b, bWins = f.b > f.a;
         return `
           <tr>
-            <td class="ft-name">${f.name}<div class="ft-def">${FACTOR_GLOSSARY[f.name] || ''}</div></td>
+            <td class="ft-name">${f.name}<div class="ft-def">${FACTOR_DETAIL_TEXT[f.name] || FACTOR_GLOSSARY[f.name] || ''}</div></td>
             <td class="ft-weight">${f.cat}</td>
             <td class="ft-pct ${aWins ? 'ft-win' : ''}">${f.a}%</td>
             <td class="ft-pct ${bWins ? 'ft-win' : ''}">${f.b}%</td>
@@ -2344,7 +2344,7 @@
         if (!list || !list.length) return '';
         return `
           <div class="report-card ${cssClass}">
-            <div class="report-card-title">${icon} ${title}</div>
+            <div class="report-card-title">${icon ? icon + ' ' : ''}${title}</div>
             <ul class="action-list">${items(list)}</ul>
           </div>`;
       };
@@ -2358,13 +2358,14 @@
 
           <div class="report-card report-card-intro">
             <div class="report-card-title">📋 Introduction</div>
-            <div class="report-card-body">Balance of power lies at the heart of every negotiation. The side that holds it sets the process and dictates the terms. Yet despite this critical stake, most negotiators don't take the time to assess the Balance of power — let alone understand how to shift it in their favor.</div>
-            <div class="report-card-body" style="margin-top:8px">Misjudging the balance of power can put you at a disadvantage before the negotiation even begins. Give the other side too much power, and you may negotiate from a position of unnecessary weakness — making concessions too early, accepting unfavorable terms, or limiting your own room to maneuver. Underestimate the other side, and you may walk into the negotiation overconfident — under-prepared, opening too extreme, or failing to understand their alternatives and their BATNA.</div>
-            <div class="report-card-body" style="margin-top:8px">The risk is not simply being wrong about who has more power. It is allowing a distorted perception of power to shape your strategy, your concessions, and ultimately the outcome. This report closes that gap for <strong>${nA}</strong> vs <strong>${nB}</strong>, using the factors selected below.</div>
+            <div class="report-card-body"><strong>Balance of power</strong> lies at the <strong>heart of every negotiation</strong>. The side that holds it sets the process and dictates the terms. Yet despite this critical stake, most negotiators <strong>don't take the time to assess</strong> the <strong>Balance of power</strong> — let alone understand how to shift it in their favor.</div>
+            <div class="report-card-body" style="margin-top:8px"><strong>Misjudging</strong> the balance of power can put you at a disadvantage before the negotiation even begins.<br><strong>- Lack of confidence:</strong> Give the other side too much power, and you may negotiate from a position of unnecessary weakness making concessions too early, accepting unfavorable terms, or limiting your own room to maneuver.<br><strong>- High confidence:</strong> Underestimate the other side, and you may walk into the negotiation overconfident —Insufficient preparation, opening too extreme, not understanding their alternatives or failing to identify their BATNA.</div>
+            <div class="report-card-body" style="margin-top:8px">The risk is not simply being wrong about who has more power. It is allowing a <strong>distorted perception</strong> of power to shape your strategy, your concessions, and ultimately the outcome.</div>
+            <div class="report-card-body" style="margin-top:8px">This tool helps you <strong>close that gap</strong>. Follow the guided process and receive your personalized report at the end of the exercise.</div>
           </div>
 
           <div class="report-card">
-            <div class="report-card-title">📊 First evaluation vs. calculated analysis</div>
+            <div class="report-card-title">1. First evaluation vs. calculated analysis</div>
             <div class="report-card-body" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--color-mid-1);margin-bottom:6px">First evaluation</div>
             <div class="report-stat-row">
               <div class="report-stat-box">
@@ -2399,14 +2400,8 @@
             <div class="report-card-body">${verdict}</div>
           </div>
 
-          <div class="report-card report-card-gap">
-            <div class="report-card-title">⚡ Subjective vs. objective</div>
-            <div class="bias-pill">${biasLabel(data.bias)}</div>
-            <div class="report-card-body">${data.comparison_insight || ''}</div>
-          </div>
-
           <div class="report-card">
-            <div class="report-card-title">📐 Detailed analysis by factor</div>
+            <div class="report-card-title">2. Detailed analysis by factor</div>
             <table class="factor-table">
               <thead><tr><th>Factor</th><th>Weight</th><th>${nA}</th><th>${nB}</th></tr></thead>
               <tbody>${factorTableRows}</tbody>
@@ -2414,27 +2409,27 @@
           </div>
 
           <div class="report-card report-card-intro">
-            <div class="report-card-title">🧭 Action plan</div>
+            <div class="report-card-title">3. Action plan</div>
             <div class="report-card-body">What did you learn from this analysis? What's your takeaway on the balance of power? Is your team aligned with this reading? What actions can you take?</div>
           </div>
 
           <div class="report-card">
-            <div class="report-card-title">🤝 Alignment</div>
+            <div class="report-card-title">a. Alignment</div>
             <div class="report-card-body">Share this analysis with your team — line manager, marketing, supply, finance, whoever is involved in this deal. Do they agree with the factors chosen? The same weighting? The same read on how each one splits between ${nA} and ${nB}?</div>
           </div>
 
           <div class="report-card">
-            <div class="report-card-title">💪 Reinforce your strengths</div>
+            <div class="report-card-title">b. Reinforce your strengths</div>
             <div class="report-factors-list" style="margin-bottom:10px">${strengthsList}</div>
             <div class="report-card-body">${data.strengths_advice || ''}</div>
           </div>
 
-          ${circleSection('Circle of control — short term', '🎯', data.control_actions, 'action-card-immediate')}
-          ${circleSection('Circle of influence — medium term', '🔄', data.influence_actions, 'action-card-medium')}
+          ${circleSection('c. Circle of control — short term', '', data.control_actions, 'action-card-immediate')}
+          ${circleSection('d. Circle of influence — medium term', '', data.influence_actions, 'action-card-medium')}
 
           ${concernList ? `
           <div class="report-card action-card-longterm">
-            <div class="report-card-title">🌐 Circle of concern — long term</div>
+            <div class="report-card-title">e. Circle of concern — long term</div>
             <ul class="action-list">${concernList}</ul>
           </div>` : ''}
 
