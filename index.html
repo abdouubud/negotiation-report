@@ -693,11 +693,11 @@
     }
 
     .report-card-title {
-      font-size: 11px;
+      font-size: 13px;
       font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .04em;
-      color: var(--color-mid-1);
+      text-transform: none;
+      letter-spacing: 0;
+      color: var(--color-dark-1);
       margin-bottom: 6px;
       display: flex;
       align-items: center;
@@ -705,7 +705,7 @@
     }
 
     .report-card-gap .report-card-title {
-      color: var(--color-accent-terracotta)
+      color: var(--color-dark-1)
     }
 
     /* Titres majeurs numérotés (1. 2. 3.) — plus grands, bleu marine, non
@@ -841,10 +841,11 @@
 
     .factor-table th {
       text-align: left;
-      font-size: 10.5px;
-      text-transform: uppercase;
-      letter-spacing: .04em;
-      color: var(--color-mid-1);
+      font-size: 11.5px;
+      text-transform: none;
+      letter-spacing: 0;
+      font-weight: 700;
+      color: var(--color-dark-1);
       padding: 0 8px 8px 0;
       border-bottom: 1px solid var(--color-mid-2)
     }
@@ -879,7 +880,7 @@
     .ft-weight {
       white-space: nowrap;
       font-weight: 600;
-      color: var(--color-accent-gold)
+      color: var(--color-dark-1)
     }
 
     .ft-pct {
@@ -2373,13 +2374,12 @@
             <div class="report-card-title">📋 Introduction</div>
             <div class="report-card-body"><strong>Balance of power</strong> lies at the <strong>heart of every negotiation</strong>. The side that holds it sets the process and dictates the terms. Yet despite this critical stake, most negotiators <strong>don't take the time to assess</strong> the <strong>Balance of power</strong> — let alone understand how to shift it in their favor.</div>
             <div class="report-card-body" style="margin-top:8px"><strong>Misjudging</strong> the balance of power can put you at a disadvantage before the negotiation even begins.<br><strong>- Lack of confidence:</strong> Give the other side too much power, and you may negotiate from a position of unnecessary weakness making concessions too early, accepting unfavorable terms, or limiting your own room to maneuver.<br><strong>- High confidence:</strong> Underestimate the other side, and you may walk into the negotiation overconfident —Insufficient preparation, opening too extreme, not understanding their alternatives or failing to identify their BATNA.</div>
-            <div class="report-card-body" style="margin-top:8px">The risk is not simply being wrong about who has more power. It is allowing a <strong>distorted perception</strong> of power to shape your strategy, your concessions, and ultimately the outcome.</div>
-            <div class="report-card-body" style="margin-top:8px">This tool helps you <strong>close that gap</strong>. Follow the guided process and receive your personalized report at the end of the exercise.</div>
+            <div class="report-card-body" style="margin-top:8px">The risk is not simply being wrong about who has more power. It is allowing a <strong>distorted perception</strong> of power to shape your strategy, your concessions, and ultimately the outcome. This tool helps you <strong>close that gap</strong>. Follow the guided process and receive your personalized report at the end of the exercise.</div>
           </div>
 
           <div class="report-card">
             <div class="report-card-title report-card-title-major">1. First evaluation vs. calculated analysis</div>
-            <div class="report-card-body" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--color-mid-1);margin-bottom:6px">First evaluation</div>
+            <div class="report-card-body" style="font-size:12px;font-weight:700;color:var(--color-dark-1);margin-bottom:6px;margin-top:6px">First evaluation</div>
             <div class="report-stat-row">
               <div class="report-stat-box">
                 <div class="report-stat-name">${nA}</div>
@@ -2395,7 +2395,7 @@
               <div class="res-bar-fe-b" style="width:${feB}%">${feB >= 8 ? `<span class="res-bar-label">${feB}%</span>` : ''}</div>
             </div>
 
-            <div class="report-card-body" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--color-mid-1);margin-bottom:6px">Calculated analysis</div>
+            <div class="report-card-body" style="font-size:12px;font-weight:700;color:var(--color-dark-1);margin-bottom:6px;margin-top:16px">Calculated analysis</div>
             <div class="report-stat-row">
               <div class="report-stat-box">
                 <div class="report-stat-name">${nA}</div>
@@ -2652,13 +2652,14 @@
           if (heroImgEl && heroImgEl.src) {
             const aspect = (heroImgEl.naturalWidth && heroImgEl.naturalHeight)
               ? heroImgEl.naturalWidth / heroImgEl.naturalHeight : 2.4;
-            const imgW = CONTENT_W, imgH = imgW / aspect;
-            doc.addImage(heroImgEl.src, 'JPEG', MARGIN, y, imgW, imgH);
-            y += imgH + 5;
+            const imgW = CONTENT_W * 0.62, imgH = imgW / aspect; // image réduite, centrée
+            const imgX = MARGIN + (CONTENT_W - imgW) / 2;
+            doc.addImage(heroImgEl.src, 'JPEG', imgX, y, imgW, imgH);
+            y += imgH + 10;
           }
         } catch (e) { /* si l'image échoue, on continue avec le texte seul */ }
 
-        richParagraph("**Balance of power** lies at the **heart of every negotiation**. The side that holds it sets the process and dictates the terms. Yet despite this critical stake, most negotiators **don't take the time to assess** the **Balance of power** — let alone understand how to shift it in their favor.\n\n**Misjudging** the balance of power can put you at a disadvantage before the negotiation even begins.\n**- Lack of confidence:** Give the other side too much power, and you may negotiate from a position of unnecessary weakness making concessions too early, accepting unfavorable terms, or limiting your own room to maneuver.\n**- High confidence:** Underestimate the other side, and you may walk into the negotiation overconfident —Insufficient preparation, opening too extreme, not understanding their alternatives or failing to identify their BATNA.\n\nThe risk is not simply being wrong about who has more power. It is allowing a **distorted perception** of power to shape your strategy, your concessions, and ultimately the outcome.\n\nThis tool helps you **close that gap**. Follow the guided process and receive your personalized report at the end of the exercise.");
+        richParagraph("**Balance of power** lies at the **heart of every negotiation**. The side that holds it sets the process and dictates the terms. Yet despite this critical stake, most negotiators **don't take the time to assess** the **Balance of power** — let alone understand how to shift it in their favor.\n\n**Misjudging** the balance of power can put you at a disadvantage before the negotiation even begins.\n**- Lack of confidence:** Give the other side too much power, and you may negotiate from a position of unnecessary weakness making concessions too early, accepting unfavorable terms, or limiting your own room to maneuver.\n**- High confidence:** Underestimate the other side, and you may walk into the negotiation overconfident —Insufficient preparation, opening too extreme, not understanding their alternatives or failing to identify their BATNA.\n\nThe risk is not simply being wrong about who has more power. It is allowing a **distorted perception** of power to shape your strategy, your concessions, and ultimately the outcome. This tool helps you **close that gap**. Follow the guided process and receive your personalized report at the end of the exercise.");
       }
 
       function newPage() {
@@ -2674,9 +2675,9 @@
       function sectionTitle(text) {
         ensureSpace(10);
         doc.setFont('helvetica', 'bold');
-        doc.setFontSize(9);
-        doc.setTextColor(...MID);
-        doc.text(text.toUpperCase(), MARGIN, y);
+        doc.setFontSize(11);
+        doc.setTextColor(...DARK);
+        doc.text(text, MARGIN, y);
         y += 5;
         doc.setDrawColor(220, 220, 220);
         doc.setLineWidth(0.15);
@@ -2684,8 +2685,9 @@
         y += 5;
       }
 
-      // Titres majeurs numérotés (1. 2. 3.) — plus grands, bleu marine, pas
-      // de majuscules forcées — pour les distinguer des autres titres.
+      // Titres majeurs numérotés (1. 2. 3.) — plus grands que les titres de
+      // sous-section, mais même couleur (bleu marine) et même logique (pas
+      // de majuscules forcées) pour une hiérarchie cohérente.
       function majorSectionTitle(text) {
         ensureSpace(13);
         doc.setFont('helvetica', 'bold');
@@ -2703,7 +2705,7 @@
         const cleanText = stripTags(text);
         doc.setFont('helvetica', opts.bold ? 'bold' : (opts.italic ? 'italic' : 'normal'));
         doc.setFontSize(opts.size || 10.5);
-        doc.setTextColor(...(opts.color || [40, 40, 40]));
+        doc.setTextColor(...(opts.color || [0, 0, 0]));
         const lines = doc.splitTextToSize(cleanText, opts.width || CONTENT_W);
         const lineH = (opts.lineH || 5.2);
         for (const line of lines) {
@@ -2721,7 +2723,7 @@
       function richParagraph(text, opts = {}) {
         const size = opts.size || 10.5;
         const lineH = opts.lineH || 5.2;
-        const color = opts.color || [40, 40, 40];
+        const color = opts.color || [0, 0, 0];
         const maxWidth = opts.width || CONTENT_W;
         const x0 = opts.x || MARGIN;
 
@@ -2852,17 +2854,33 @@
       }
 
       function factorTable(list) {
-        const nameW = 124, weightW = 18, pctW = 19;
+        const nameW = 112, weightW = 16, pctW = 26;
         const xName = MARGIN, xWeight = MARGIN + nameW, xPctA = xWeight + weightW, xPctB = xPctA + pctW;
+
+        // Réduit dynamiquement la taille de police jusqu'à ce que le texte
+        // tienne dans la largeur disponible — évite tout chevauchement entre
+        // les deux en-têtes de colonne quand les noms sont longs (ex. "Your
+        // counterpart").
+        function fitHeaderText(text, maxWidth) {
+          let size = 8;
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(size);
+          while (doc.getTextWidth(text) > maxWidth && size > 6) {
+            size -= 0.5;
+            doc.setFontSize(size);
+          }
+        }
 
         ensureSpace(9);
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(8);
-        doc.setTextColor(...MID);
-        doc.text('FACTOR', xName, y);
-        doc.text('WEIGHT', xWeight, y);
-        doc.text(nA.toUpperCase(), xPctA + pctW, y, { align: 'right' });
-        doc.text(nB.toUpperCase(), xPctB + pctW, y, { align: 'right' });
+        doc.setTextColor(...DARK);
+        doc.text('Factor', xName, y);
+        doc.text('Weight', xWeight, y);
+        fitHeaderText(nA, pctW - 2);
+        doc.text(nA, xPctA + pctW, y, { align: 'right' });
+        fitHeaderText(nB, pctW - 2);
+        doc.text(nB, xPctB + pctW, y, { align: 'right' });
         y += 3;
         doc.setDrawColor(210, 210, 210);
         doc.setLineWidth(0.2);
@@ -2939,15 +2957,17 @@
       addCoverPage();
 
       majorSectionTitle('1. First evaluation vs. calculated analysis');
-      paragraph('FIRST EVALUATION', { bold: true, size: 8.5, color: MID, after: 1 });
+      paragraph('First evaluation', { bold: true, size: 9.5, color: DARK, after: 1 });
       statBoxes(nA, feA, nB, feB);
-      paragraph('CALCULATED ANALYSIS', { bold: true, size: 8.5, color: MID, after: 1 });
+      y += 4;
+      paragraph('Calculated analysis', { bold: true, size: 9.5, color: DARK, after: 1 });
       statBoxes(nA, sA, nB, sB);
       const diff = Math.abs(sA - sB);
       const verdict = diff < 5 ? 'The balance of power is roughly equal.'
         : sA > sB ? `${nA} holds a power advantage (${sA}% vs ${sB}%).`
           : `${nB} holds a power advantage (${sB}% vs ${sA}%).`;
-      paragraph(verdict, { bold: true });
+      y += 4;
+      paragraph(verdict, { bold: true, color: [0, 0, 0] });
 
       // Saut de page forcé : la page 1 s'arrête ici, "2. Detailed analysis by
       // factor" démarre toujours en haut de la page 2.
