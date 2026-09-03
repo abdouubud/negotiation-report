@@ -1085,6 +1085,7 @@
 
       <h1>Negotiation Balance of power</h1><br>
       <p class="sub" style="text-align:center">Assess the balance of power between two parties before negotiating</p>
+      <p style="text-align:center;font-size:13px;color:var(--color-mid-1);margin:-0.5rem 0 1.5rem">⏱ This exercise takes about 15 minutes</p>
 
       <div style="text-align:center;margin:0 0 1.5rem">
         <img
@@ -2372,6 +2373,7 @@
 
           <div class="report-card report-card-intro">
             <div class="report-card-title">📋 Introduction</div>
+            <div class="report-card-body" style="font-size:12px;color:var(--color-mid-1);margin-bottom:6px">⏱ This exercise takes about 15 minutes</div>
             <div class="report-card-body"><strong>Balance of power</strong> lies at the <strong>heart of every negotiation</strong>. The side that holds it sets the process and dictates the terms. Yet despite this critical stake, most negotiators <strong>don't take the time to assess</strong> the <strong>Balance of power</strong> — let alone understand how to shift it in their favor.</div>
             <div class="report-card-body" style="margin-top:8px"><strong>Misjudging</strong> the balance of power can put you at a disadvantage before the negotiation even begins.<br><strong>- Lack of confidence:</strong> Give the other side too much power, and you may negotiate from a position of unnecessary weakness making concessions too early, accepting unfavorable terms, or limiting your own room to maneuver.<br><strong>- High confidence:</strong> Underestimate the other side, and you may walk into the negotiation overconfident, insufficient preparation, opening too extreme, not understanding their alternatives or failing to identify their BATNA.</div>
             <div class="report-card-body" style="margin-top:8px">The risk is not simply being wrong about who has more power. It is allowing a <strong>distorted perception</strong> of power to shape your strategy, your concessions, and ultimately the outcome. This tool helps you <strong>close that gap</strong>. Follow the guided process and receive your personalized report at the end of the exercise.</div>
@@ -2605,8 +2607,11 @@
       let y = TOP_Y;
 
       function addHeader() {
-        // Pages 2+ n'ont plus de logo ni de titre répété (demande explicite) —
-        // on garde juste une marge de départ cohérente en haut de page.
+        // Pages 2+ : pas de titre répété, juste le petit logo en haut à droite.
+        try {
+          const logoH = 4, logoW = logoH * (300 / 70);
+          doc.addImage(WENEGO_GOLD_LOGO_BASE64, 'PNG', PAGE_W - MARGIN - logoW, 8, logoW, logoH);
+        } catch (e) { /* si le logo échoue, on continue sans bloquer le PDF */ }
       }
 
       // Page de couverture (page 1) : logo, titre, "Prepared for", "Assessing
@@ -2649,7 +2654,13 @@
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(...DARK);
         doc.text(`${nA} and ${nB}`, x, y);
-        y += 10;
+        y += 6;
+
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9);
+        doc.setTextColor(...MID);
+        doc.text('This exercise takes about 15 minutes', MARGIN, y);
+        y += 8;
 
         // Image balance/seesaw — récupérée directement depuis l'outil. Cette
         // image est déjà correctement recadrée (panoramique) à la source, on
