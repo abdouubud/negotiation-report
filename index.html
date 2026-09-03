@@ -697,7 +697,7 @@
       font-weight: 700;
       text-transform: none;
       letter-spacing: 0;
-      color: var(--color-dark-1);
+      color: #000;
       margin-bottom: 6px;
       display: flex;
       align-items: center;
@@ -705,7 +705,7 @@
     }
 
     .report-card-gap .report-card-title {
-      color: var(--color-dark-1)
+      color: #000
     }
 
     /* Titres majeurs numérotés (1. 2. 3.) — plus grands, bleu marine, non
@@ -2444,17 +2444,17 @@
 
           <div class="report-card action-card-immediate">
             <div class="report-card-title">D. Circle of control — short term</div>
-            <div class="report-card-body">The circle of control brings together everything you can <strong>act on directly</strong>, through your own decisions and actions.<br><br><strong>Questions to go further:</strong><br>What depends on you?<br>Which factors do you have a hand in?<br>Many power factors are directly actionable: preparation, aligning your team around a shared plan, taking initiative, training your team, the quality of your information.<br>What short-term actions can you take to shift these factors in your favor?<br>How can you measure the results of your actions?</div>
+            <div class="report-card-body">The circle of control brings together everything you can <strong>act on directly</strong>, through your own decisions and actions.<br><br><strong>Questions to go further:</strong> What depends on you? Which factors do you have a hand in? Many power factors are directly actionable: preparation, aligning your team around a shared plan, taking initiative, training your team, the quality of your information. What short-term actions can you take to shift these factors in your favor? How can you measure the results of your actions?</div>
           </div>
 
           <div class="report-card action-card-medium">
             <div class="report-card-title">E. Circle of influence — medium term</div>
-            <div class="report-card-body">The circle of influence brings together elements you can <strong>act on indirectly</strong> — by influencing other people or factors without controlling them outright.<br><br><strong>Questions to go further:</strong><br>Which factors are not directly in your hands, but that you can influence indirectly over the medium term?<br>The quality of the data, the history and quality of the relationship, deadlines, networks & influence, the weight of brands?<br>What actions can you take? Who do you need to convince?<br>How can you measure the results of your actions?</div>
+            <div class="report-card-body">The circle of influence brings together elements you can <strong>act on indirectly</strong> — by influencing other people or factors without controlling them outright.<br><br><strong>Questions to go further:</strong> Which factors are not directly in your hands, but that you can influence indirectly over the medium term? The quality of the data, the history and quality of the relationship, deadlines, networks & influence, the weight of brands? What actions can you take? Who do you need to convince? How can you measure the results of your actions?</div>
           </div>
 
           <div class="report-card action-card-longterm">
             <div class="report-card-title">F. Circle of concern — long term</div>
-            <div class="report-card-body">The circle of concern brings together things that matter to you but over which you have <strong>neither control nor influence</strong>.<br><br><strong>Questions to go further:</strong><br>What factors are outside your control?<br>For example, the law, market growth, and other macro factors affecting the deal.<br>Are they in your favor or against you?<br>Is there any action you can take?</div>
+            <div class="report-card-body">The circle of concern brings together things that matter to you but over which you have <strong>neither control nor influence</strong>.<br><br><strong>Questions to go further:</strong> What factors are outside your control? For example, the law, market growth, and other macro factors affecting the deal. Are they in your favor or against you? Is there any action you can take?</div>
           </div>
 
         </div>`;
@@ -2617,7 +2617,7 @@
 
         // Logo WeNego (fond transparent) en haut à droite de la page de garde
         try {
-          const logoH = 9, logoW = logoH * (188 / 44);
+          const logoH = 5.5, logoW = logoH * (188 / 44);
           doc.addImage(WENEGO_GOLD_LOGO_BASE64, 'PNG', PAGE_W - MARGIN - logoW, 8, logoW, logoH);
         } catch (e) { /* si le logo échoue, on continue sans bloquer le PDF */ }
 
@@ -2683,7 +2683,7 @@
         ensureSpace(10);
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(11);
-        doc.setTextColor(...DARK);
+        doc.setTextColor(0, 0, 0);
         doc.text(text, MARGIN, y);
         y += 5;
         doc.setDrawColor(220, 220, 220);
@@ -3002,13 +3002,13 @@
       richParagraph("Among these strengths, which ones would it be wise to **show the other side**? For example, showing the strength of your BATNA, your team's alignment, your initiative, and a positive relationship history can work in your favor during the negotiation. On the other hand, it may be **wiser to keep** the quality of your preparation and your information under wraps.");
 
       sectionTitle('D. Circle of control — short term');
-      richParagraph("The circle of control brings together everything you can **act on directly**, through your own decisions and actions.\n\n**Questions to go further:**\nWhat depends on you?\nWhich factors do you have a hand in?\nMany power factors are directly actionable: preparation, aligning your team around a shared plan, taking initiative, training your team, the quality of your information.\nWhat short-term actions can you take to shift these factors in your favor?\nHow can you measure the results of your actions?", { color: [0, 0, 0], after: 4 });
+      richParagraph("The circle of control brings together everything you can **act on directly**, through your own decisions and actions.\n\n**Questions to go further:** What depends on you? Which factors do you have a hand in? Many power factors are directly actionable: preparation, aligning your team around a shared plan, taking initiative, training your team, the quality of your information. What short-term actions can you take to shift these factors in your favor? How can you measure the results of your actions?", { color: [0, 0, 0], after: 4 });
 
       sectionTitle('E. Circle of influence — medium term');
-      richParagraph("The circle of influence brings together elements you can **act on indirectly** — by influencing other people or factors without controlling them outright.\n\n**Questions to go further:**\nWhich factors are not directly in your hands, but that you can influence indirectly over the medium term?\nThe quality of the data, the history and quality of the relationship, deadlines, networks & influence, the weight of brands?\nWhat actions can you take? Who do you need to convince?\nHow can you measure the results of your actions?", { color: [0, 0, 0], after: 4 });
+      richParagraph("The circle of influence brings together elements you can **act on indirectly** — by influencing other people or factors without controlling them outright.\n\n**Questions to go further:** Which factors are not directly in your hands, but that you can influence indirectly over the medium term? The quality of the data, the history and quality of the relationship, deadlines, networks & influence, the weight of brands? What actions can you take? Who do you need to convince? How can you measure the results of your actions?", { color: [0, 0, 0], after: 4 });
 
       sectionTitle('F. Circle of concern — long term');
-      richParagraph("The circle of concern brings together things that matter to you but over which you have **neither control nor influence**.\n\n**Questions to go further:**\nWhat factors are outside your control?\nFor example, the law, market growth, and other macro factors affecting the deal.\nAre they in your favor or against you?\nIs there any action you can take?", { color: [0, 0, 0], after: 4 });
+      richParagraph("The circle of concern brings together things that matter to you but over which you have **neither control nor influence**.\n\n**Questions to go further:** What factors are outside your control? For example, the law, market growth, and other macro factors affecting the deal. Are they in your favor or against you? Is there any action you can take?", { color: [0, 0, 0], after: 4 });
 
       // ---- Pied de page sur chaque page : préparé par / date à gauche, numéro à droite ----
       const totalPages = doc.internal.getNumberOfPages();
