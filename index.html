@@ -809,7 +809,7 @@
     .report-stat-val {
       font-size: 20px;
       font-weight: 700;
-      color: var(--color-dark-1)
+      color: #000
     }
 
     .report-factors-list {
@@ -845,7 +845,7 @@
       text-transform: none;
       letter-spacing: 0;
       font-weight: 700;
-      color: var(--color-dark-1);
+      color: #000;
       padding: 0 8px 8px 0;
       border-bottom: 1px solid var(--color-mid-2)
     }
@@ -865,7 +865,7 @@
 
     .ft-name {
       font-weight: 600;
-      color: var(--color-dark-1);
+      color: #000;
       max-width: 220px
     }
 
@@ -880,7 +880,7 @@
     .ft-weight {
       white-space: nowrap;
       font-weight: 600;
-      color: var(--color-dark-1)
+      color: #000
     }
 
     .ft-pct {
@@ -2379,7 +2379,7 @@
 
           <div class="report-card">
             <div class="report-card-title report-card-title-major">1. First evaluation vs. calculated analysis</div>
-            <div class="report-card-body" style="font-size:12px;font-weight:700;color:var(--color-dark-1);margin-bottom:6px;margin-top:6px">First evaluation</div>
+            <div class="report-card-body" style="font-size:12px;font-weight:700;color:#000;margin-bottom:6px;margin-top:6px">First evaluation</div>
             <div class="report-stat-row">
               <div class="report-stat-box">
                 <div class="report-stat-name">${nA}</div>
@@ -2395,7 +2395,7 @@
               <div class="res-bar-fe-b" style="width:${feB}%">${feB >= 8 ? `<span class="res-bar-label">${feB}%</span>` : ''}</div>
             </div>
 
-            <div class="report-card-body" style="font-size:12px;font-weight:700;color:var(--color-dark-1);margin-bottom:6px;margin-top:16px">Calculated analysis</div>
+            <div class="report-card-body" style="font-size:12px;font-weight:700;color:#000;margin-bottom:6px;margin-top:16px">Calculated analysis</div>
             <div class="report-stat-row">
               <div class="report-stat-box">
                 <div class="report-stat-name">${nA}</div>
@@ -2825,7 +2825,7 @@
           doc.text(label, x + boxW / 2, y + 6, { align: 'center' });
           doc.setFont('helvetica', 'bold');
           doc.setFontSize(14);
-          doc.setTextColor(...DARK);
+          doc.setTextColor(0, 0, 0);
           doc.text(val + '%', x + boxW / 2, y + 14, { align: 'center' });
         });
         y += boxH + 4;
@@ -2882,7 +2882,7 @@
         ensureSpace(9);
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(9.5);
-        doc.setTextColor(...DARK);
+        doc.setTextColor(0, 0, 0);
         doc.text('Factor', xName, y);
         doc.text('Weight', xWeight, y);
         fitHeaderText(nA, pctW - 2);
@@ -2907,7 +2907,7 @@
 
           doc.setFont('helvetica', 'bold');
           doc.setFontSize(9.5);
-          doc.setTextColor(...DARK);
+          doc.setTextColor(0, 0, 0);
           nameLines.forEach((l, i) => doc.text(l, xName, y + 3 + i * 4.2));
           let subY = y + 3 + nameLines.length * 4.2;
           doc.setFont('helvetica', 'normal');
@@ -2917,15 +2917,15 @@
 
           doc.setFont('helvetica', 'bold');
           doc.setFontSize(9);
-          doc.setTextColor(...DARK);
+          doc.setTextColor(0, 0, 0);
           doc.text(f.cat, xWeight, y + 3);
 
           const aWin = f.a > f.b, bWin = f.b > f.a;
           doc.setFont('helvetica', 'bold');
           doc.setFontSize(9.5);
-          doc.setTextColor(...(aWin ? GREEN : DARK));
+          doc.setTextColor(...(aWin ? GREEN : [0, 0, 0]));
           doc.text(f.a + '%', xPctA + pctW, y + 3, { align: 'right' });
-          doc.setTextColor(...(bWin ? GREEN : DARK));
+          doc.setTextColor(...(bWin ? GREEN : [0, 0, 0]));
           doc.text(f.b + '%', xPctB + pctW, y + 3, { align: 'right' });
 
           y += rowH + 2;
@@ -2966,10 +2966,10 @@
 
       y += 6;
       majorSectionTitle('1. First evaluation vs. calculated analysis');
-      paragraph('First evaluation', { bold: true, size: 9.5, color: DARK, after: 1 });
+      paragraph('First evaluation', { bold: true, size: 9.5, color: [0, 0, 0], after: 1 });
       statBoxes(nA, feA, nB, feB);
       y += 4;
-      paragraph('Calculated analysis', { bold: true, size: 9.5, color: DARK, after: 1 });
+      paragraph('Calculated analysis', { bold: true, size: 9.5, color: [0, 0, 0], after: 1 });
       statBoxes(nA, sA, nB, sB);
       const diff = Math.abs(sA - sB);
       const verdict = diff < 5 ? 'The balance of power is **roughly equal**.'
