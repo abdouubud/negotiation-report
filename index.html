@@ -1083,9 +1083,13 @@
        ===================================================================== -->
     <div class="step active" id="step1">
 
-      <h1>Negotiation Balance of power</h1><br>
-      <p class="sub" style="text-align:center">Assess the balance of power between two parties before negotiating</p>
-      <p style="text-align:center;font-size:13px;color:var(--color-mid-1);margin:-0.5rem 0 1.5rem">⏱ This exercise takes about 15 minutes</p>
+      <div style="text-align:right;margin-bottom:0.5rem">
+        <button type="button" id="lang-en" onclick="setLang('en')" style="border:1px solid var(--color-mid-2);background:var(--color-dark-1);color:#fff;font-size:12px;font-weight:700;padding:4px 10px;border-radius:6px 0 0 6px;cursor:pointer">EN</button><button type="button" id="lang-fr" onclick="setLang('fr')" style="border:1px solid var(--color-mid-2);border-left:none;background:#fff;color:var(--color-dark-1);font-size:12px;font-weight:700;padding:4px 10px;border-radius:0 6px 6px 0;cursor:pointer">FR</button>
+      </div>
+
+      <h1 id="page1-title">Negotiation Balance of power</h1><br>
+      <p class="sub" id="page1-subtitle" style="text-align:center">Assess the balance of power between two parties before negotiating</p>
+      <p id="page1-15min" style="text-align:center;font-size:13px;color:var(--color-mid-1);margin:-0.5rem 0 1.5rem">⏱ This exercise takes about 15 minutes</p>
 
       <div style="text-align:center;margin:0 0 1.5rem">
         <img
@@ -1094,26 +1098,7 @@
           style="width:100%;height:300px;object-fit:cover;object-position:center;border-radius:12px">
       </div>
 
-      <p style="font-size:14px;color:var(--color-dark-2);line-height:1.6;margin-bottom:1.5rem"><strong>Balance of
-          power</strong> lies at the
-        <strong>heart of every negotiation</strong>. The side that holds it sets the process and dictates the terms. Yet
-        despite this
-        critical stake, most negotiators <strong>don't take the time to assess</strong> the <strong>Balance of
-          power</strong> — let alone understand how to
-        shift it in their favor.<br><br><strong>Misjudging</strong> the balance of power can put you at a disadvantage
-        before the
-        negotiation even begins. <br><strong>- Lack of confidence:</strong> Give the other side too much power, and you
-        may negotiate from a position of unnecessary
-        weakness making concessions too early, accepting unfavorable terms, or limiting your own room to
-        maneuver.<br> <strong>- High confidence:</strong> Underestimate the other side, and you may walk into the
-        negotiation overconfident, insufficient preparation, opening too extreme, not understanding their alternatives
-        or failing to identify their BATNA.<br><br>The risk is not simply
-        being wrong about who has more power. It is allowing a <strong>distorted perception</strong> of power to shape
-        your strategy, your
-        concessions, and ultimately the outcome.<br><br>This tool helps you <strong>close that gap</strong>. Follow the
-        guided process and
-        receive your personalized report at the end of the exercise.
-      </p>
+      <p id="page1-intro" style="font-size:14px;color:var(--color-dark-2);line-height:1.6;margin-bottom:1.5rem"></p>
 
 
       <!-- ---------- STEP 1 : Nommer les deux parties ---------- -->
@@ -1916,11 +1901,12 @@
       <div class="ai-section">
         <div class="ai-section-title">Analysis &amp; Recommendations</div>
         <div class="ai-key-row">
-          <span class="ai-key-label">Prepared for</span>
+          <span class="ai-key-label" id="prepared-for-label">Prepared for</span>
           <input type="text" id="preparedByName" placeholder="Your first and last name">
         </div>
         <button class="btn-generate" id="btn-generate" onclick="triggerAI()">✦ Generate analysis</button>
         <button class="btn" id="btn-download-pdf" onclick="downloadReportPDF()" style="display:none;margin-top:8px">⬇ Download as PDF</button>
+        <div id="pdf-popup-notice" style="display:none;margin-top:6px;font-size:12px;color:var(--color-mid-1)">Make sure pop-ups are enabled for this site so the report can download.</div>
         <div id="ai-advice" style="display:none"></div>
       </div>
 
@@ -1933,6 +1919,128 @@
   </div>
 
   <script>
+    /* =========================================================================
+       LANGUE — EN / FR
+       Système de traduction simple : un dictionnaire par langue, un sélecteur
+       toujours visible, et une fonction mdToHtml() qui convertit le **gras**
+       (utilisé aussi bien à l'écran que dans le PDF) en <strong> pour l'écran.
+       ========================================================================= */
+    let LANG = 'en';
+
+    const I18N = {
+      en: {
+        title: 'Negotiation Balance of power',
+        subtitle: 'Assess the balance of power between two parties before negotiating',
+        fifteenMin: '⏱ This exercise takes about 15 minutes',
+        intro1: "**Balance of power** lies at the **heart of every negotiation**. The side that holds it sets the process and dictates the terms. Yet despite this critical stake, most negotiators **don't take the time to assess** the **Balance of power** — let alone understand how to shift it in their favor.",
+        intro2: "**Misjudging** the balance of power can put you at a disadvantage before the negotiation even begins.\n**- Lack of confidence:** Give the other side too much power, and you may negotiate from a position of unnecessary weakness making concessions too early, accepting unfavorable terms, or limiting your own room to maneuver.\n**- High confidence:** Underestimate the other side, and you may walk into the negotiation overconfident, insufficient preparation, opening too extreme, not understanding their alternatives or failing to identify their BATNA.",
+        intro3: "The risk is not simply being wrong about who has more power. It is allowing a **distorted perception** of power to shape your strategy, your concessions, and ultimately the outcome. This tool helps you **close that gap**. Follow the guided process and receive your personalized report at the end of the exercise.",
+        title1: '1. First evaluation vs. calculated analysis',
+        title2: '2. Detailed analysis by factor',
+        title3: '3. Action plan',
+        titleA: 'A. Alignment',
+        titleB: 'B. Reinforce your strengths',
+        titleC: 'C. Use your strengths',
+        titleD: 'D. Circle of control — short term',
+        titleE: 'E. Circle of influence — medium term',
+        titleF: 'F. Circle of concern — long term',
+        reflectionQ: "What did you learn from this analysis? What's your **takeaway** on the balance of power? Is your **team aligned** with this reading? What **actions** can you take?",
+        alignmentText: "Share this analysis with your team — line manager, marketing, supply, finance, whoever is involved in this deal. Do they agree with the factors chosen? The same weighting? The same read on how each one splits between {A} and {B}?",
+        reinforceText: "You've listed the strengths above. What can your organization do to **lock these strengths** in? Could you gain another 5%? 10%? or more? What can you — or your organization — do **to develop them** further?",
+        useStrengthsText: "Among these strengths, which ones would it be wise to **show the other side**? For example, showing the strength of your BATNA, your team's alignment, your initiative, and a positive relationship history can work in your favor during the negotiation. On the other hand, it may be **wiser to keep** the quality of your preparation and your information under wraps.",
+        controlIntro: "The circle of control brings together everything you can **act on directly**, through your own decisions and actions.\n\n**Questions to go further:** What depends on you? Which factors do you have a hand in? Many power factors are directly actionable: preparation, aligning your team around a shared plan, taking initiative, training your team, the quality of your information. What short-term actions can you take to shift these factors in your favor? How can you measure the results of your actions?",
+        influenceIntro: "The circle of influence brings together elements you can **act on indirectly** — by influencing other people or factors without controlling them outright.\n\n**Questions to go further:** Which factors are not directly in your hands, but that you can influence indirectly over the medium term? The quality of the data, the history and quality of the relationship, deadlines, networks & influence, the weight of brands? What actions can you take? Who do you need to convince? How can you measure the results of your actions?",
+        concernIntro: "The circle of concern brings together things that matter to you but over which you have **neither control nor influence**.\n\n**Questions to go further:** What factors are outside your control? For example, the law, market growth, and other macro factors affecting the deal. Are they in your favor or against you? Is there any action you can take?",
+        firstEval: 'First evaluation',
+        calcAnalysis: 'Calculated analysis',
+        factorCol: 'Factor',
+        weightCol: 'Weight',
+        roughlyEqual: 'The balance of power is **roughly equal**.',
+        advantageVerdict: (X, p1, p2) => `**${X} holds a power advantage (${p1}% vs ${p2}%).**`,
+        preparedFor: 'Prepared for',
+        assessingBetween: 'Assessing the balance of power between',
+        generateBtn: '✦ Generate analysis',
+        regenerateBtn: '✦ Regenerate analysis',
+        downloadBtn: '⬇ Download as PDF',
+        popupNotice: 'Make sure pop-ups are enabled for this site so the report can download.',
+      },
+      fr: {
+        title: 'Balance des pouvoirs de négociation',
+        subtitle: 'Évaluez le rapport de force entre deux parties avant de négocier',
+        fifteenMin: '⏱ Cet exercice prend environ 15 minutes',
+        intro1: "Le **rapport de force** est au **cœur de toute négociation**. Le camp qui le détient impose le déroulement et dicte les termes. Pourtant, malgré cet enjeu critique, la plupart des négociateurs **ne prennent pas le temps d'évaluer** ce **rapport de force** — encore moins de comprendre comment le faire basculer en leur faveur.",
+        intro2: "**Mal évaluer** le rapport de force peut vous désavantager avant même que la négociation ne commence.\n**- Manque de confiance :** Accorder trop de pouvoir à l'autre partie peut vous amener à négocier en position de faiblesse — en faisant des concessions trop tôt, en acceptant des conditions défavorables, ou en réduisant votre propre marge de manœuvre.\n**- Excès de confiance :** Sous-estimer l'autre partie peut vous faire entrer dans la négociation trop confiant : préparation insuffisante, ouverture trop extrême, ou méconnaissance de leurs alternatives et de leur BATNA.",
+        intro3: "Le risque n'est pas simplement de se tromper sur qui détient le plus de pouvoir. C'est de laisser une **perception déformée** du pouvoir orienter votre stratégie, vos concessions, et in fine le résultat. Cet outil vous aide à **combler cet écart**. Suivez le processus guidé et recevez votre rapport personnalisé à la fin de l'exercice.",
+        title1: '1. Première évaluation vs. analyse calculée',
+        title2: '2. Analyse détaillée par facteur',
+        title3: "3. Plan d'action",
+        titleA: 'A. Alignement',
+        titleB: 'B. Renforcez vos points forts',
+        titleC: 'C. Utilisez vos points forts',
+        titleD: 'D. Cercle de contrôle — court terme',
+        titleE: "E. Cercle d'influence — moyen terme",
+        titleF: 'F. Cercle de préoccupation — long terme',
+        reflectionQ: "Qu'avez-vous appris de cette analyse ? Quel est votre **constat** sur le rapport de force ? Votre **équipe est-elle alignée** avec cette lecture ? Quelles **actions** pouvez-vous entreprendre ?",
+        alignmentText: "Partagez cette analyse avec votre équipe — line manager, marketing, supply chain, finance, toute personne impliquée dans ce deal. Sont-ils d'accord avec les facteurs choisis ? La même pondération ? La même lecture de la répartition entre {A} et {B} ?",
+        reinforceText: "Vous avez listé vos points forts ci-dessus. Que peut faire votre organisation pour **ancrer ces points forts** ? Pourriez-vous gagner 5 % ? 10 % ? ou plus ? Que pouvez-vous — vous ou votre organisation — faire **pour les développer** davantage ?",
+        useStrengthsText: "Parmi ces points forts, lesquels serait-il judicieux de **montrer à l'autre camp** ? Par exemple, montrer la solidité de votre BATNA, l'alignement de vos équipes, votre prise d'initiative, ou un historique de relation positif peut jouer en votre faveur dans la négociation. En revanche, il est peut-être plus judicieux de **garder discrète** la qualité de votre préparation et de votre information.",
+        controlIntro: "Le cercle de contrôle regroupe tout ce sur quoi vous pouvez **agir directement**, par vos propres décisions et actions.\n\n**Questions pour aller plus loin :** Qu'est-ce qui dépend de vous ? Sur quels facteurs avez-vous la main ? De nombreux facteurs de pouvoir sont directement actionnables : la préparation, l'alignement de l'équipe autour d'un plan commun, la prise d'initiative, la formation de l'équipe, la qualité de l'information. Quelles actions à court terme pouvez-vous mener pour faire évoluer ces facteurs en votre faveur ? Comment pouvez-vous mesurer les résultats de vos actions ?",
+        influenceIntro: "Le cercle d'influence regroupe les éléments sur lesquels vous pouvez **agir indirectement** — en influençant d'autres personnes ou facteurs sans les contrôler directement.\n\n**Questions pour aller plus loin :** Sur quels facteurs n'avez-vous pas la main directement, mais que vous pouvez influencer indirectement à moyen terme ? La qualité de la donnée, l'historique et la qualité de la relation, les délais, les réseaux et l'influence, le poids des marques ? Quelles actions pouvez-vous mener ? Qui devez-vous convaincre ? Comment pouvez-vous mesurer les résultats de vos actions ?",
+        concernIntro: "Le cercle de préoccupation regroupe ce qui compte pour vous mais sur quoi vous n'avez **ni contrôle ni influence**.\n\n**Questions pour aller plus loin :** Quels facteurs échappent à votre contrôle ? Par exemple la loi, la croissance du marché, et d'autres facteurs macro qui impactent le deal. Jouent-ils en votre faveur ou en votre défaveur ? Y a-t-il une action à envisager ?",
+        firstEval: 'Première évaluation',
+        calcAnalysis: 'Analyse calculée',
+        factorCol: 'Facteur',
+        weightCol: 'Poids',
+        roughlyEqual: 'Le rapport de force est **globalement équilibré**.',
+        advantageVerdict: (X, p1, p2) => `**${X} dispose d'un avantage de pouvoir (${p1}% vs ${p2}%).**`,
+        preparedFor: 'Préparé pour',
+        assessingBetween: 'Évaluation du rapport de force entre',
+        generateBtn: "✦ Générer l'analyse",
+        regenerateBtn: "✦ Régénérer l'analyse",
+        downloadBtn: '⬇ Télécharger en PDF',
+        popupNotice: 'Assurez-vous que les pop-ups sont autorisés pour ce site afin de pouvoir télécharger le rapport.',
+      }
+    };
+
+    function T() { return I18N[LANG]; }
+
+    // Convertit le **gras** (syntaxe partagée avec le PDF) en <strong> pour l'écran.
+    function mdToHtml(text) {
+      return (text || '').replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+    }
+
+    // Met à jour tous les textes statiques de la page 1 selon la langue choisie.
+    // Le rapport (écran + PDF) lit directement T() au moment de sa génération,
+    // donc pas besoin de le retraduire ici — seul un rapport déjà affiché à
+    // l'écran resterait dans l'ancienne langue jusqu'à la prochaine génération.
+    function applyLanguage() {
+      const t = T();
+      document.getElementById('page1-title').textContent = t.title;
+      document.getElementById('page1-subtitle').textContent = t.subtitle;
+      document.getElementById('page1-15min').textContent = t.fifteenMin;
+      document.getElementById('page1-intro').innerHTML =
+        mdToHtml(t.intro1) + '<br><br>' + mdToHtml(t.intro2) + '<br><br>' + mdToHtml(t.intro3);
+
+      document.getElementById('lang-en').style.background = LANG === 'en' ? 'var(--color-dark-1)' : '#fff';
+      document.getElementById('lang-en').style.color = LANG === 'en' ? '#fff' : 'var(--color-dark-1)';
+      document.getElementById('lang-fr').style.background = LANG === 'fr' ? 'var(--color-dark-1)' : '#fff';
+      document.getElementById('lang-fr').style.color = LANG === 'fr' ? '#fff' : 'var(--color-dark-1)';
+
+      const genBtn = document.getElementById('btn-generate');
+      if (genBtn && !genBtn.disabled) genBtn.innerHTML = t.generateBtn;
+      const dlBtn = document.getElementById('btn-download-pdf');
+      if (dlBtn) dlBtn.textContent = t.downloadBtn;
+      const notice = document.getElementById('pdf-popup-notice');
+      if (notice) notice.textContent = t.popupNotice;
+      const prepLabel = document.getElementById('prepared-for-label');
+      if (prepLabel) prepLabel.textContent = t.preparedFor;
+    }
+
+    function setLang(lang) {
+      LANG = lang;
+      applyLanguage();
+    }
+
     /* =========================================================================
        DONNÉES DE RÉFÉRENCE
        ========================================================================= */
@@ -2324,6 +2432,7 @@
     }
 
     function renderReportCards(data, nA, nB, feA, feB, sA, sB, factorDetails, circleGroups, topStrengths) {
+      const t = T();
       const items = (arr) => (arr || []).map(a => {
         if (a && typeof a === 'object') {
           return `<li><strong>${a.action}</strong>${a.why ? `<span class="action-why">${a.why}</span>` : ''}</li>`;
@@ -2332,10 +2441,11 @@
       }).join('');
 
       const diff = Math.abs(sA - sB);
-      const verdict = diff < 5
-        ? 'The balance of power is <strong>roughly equal</strong>.'
-        : sA > sB ? `<strong>${nA}</strong> holds a power advantage (${sA}% vs ${sB}%).`
-          : `<strong>${nB}</strong> holds a power advantage (${sB}% vs ${sA}%).`;
+      const verdictMd = diff < 5
+        ? t.roughlyEqual
+        : sA > sB ? t.advantageVerdict(nA, sA, sB)
+          : t.advantageVerdict(nB, sB, sA);
+      const verdict = mdToHtml(verdictMd);
 
       // Tableau détaillé : Facteur | Poids | Définition | %A | %B — trié par poids,
       // le pourcentage du camp gagnant est mis en vert.
@@ -2368,20 +2478,22 @@
         `<li><strong>${c.factor}:</strong><span class="action-why">${c.note}</span></li>`
       ).join('');
 
+      const alignmentText = t.alignmentText.replace('{A}', nA).replace('{B}', nB);
+
       return `
         <div class="report-cards">
 
           <div class="report-card report-card-intro">
             <div class="report-card-title">📋 Introduction</div>
-            <div class="report-card-body" style="font-size:12px;color:var(--color-mid-1);margin-bottom:6px">⏱ This exercise takes about 15 minutes</div>
-            <div class="report-card-body"><strong>Balance of power</strong> lies at the <strong>heart of every negotiation</strong>. The side that holds it sets the process and dictates the terms. Yet despite this critical stake, most negotiators <strong>don't take the time to assess</strong> the <strong>Balance of power</strong> — let alone understand how to shift it in their favor.</div>
-            <div class="report-card-body" style="margin-top:8px"><strong>Misjudging</strong> the balance of power can put you at a disadvantage before the negotiation even begins.<br><strong>- Lack of confidence:</strong> Give the other side too much power, and you may negotiate from a position of unnecessary weakness making concessions too early, accepting unfavorable terms, or limiting your own room to maneuver.<br><strong>- High confidence:</strong> Underestimate the other side, and you may walk into the negotiation overconfident, insufficient preparation, opening too extreme, not understanding their alternatives or failing to identify their BATNA.</div>
-            <div class="report-card-body" style="margin-top:8px">The risk is not simply being wrong about who has more power. It is allowing a <strong>distorted perception</strong> of power to shape your strategy, your concessions, and ultimately the outcome. This tool helps you <strong>close that gap</strong>. Follow the guided process and receive your personalized report at the end of the exercise.</div>
+            <div class="report-card-body" style="font-size:12px;color:var(--color-mid-1);margin-bottom:6px">${t.fifteenMin}</div>
+            <div class="report-card-body">${mdToHtml(t.intro1)}</div>
+            <div class="report-card-body" style="margin-top:8px">${mdToHtml(t.intro2)}</div>
+            <div class="report-card-body" style="margin-top:8px">${mdToHtml(t.intro3)}</div>
           </div>
 
           <div class="report-card">
-            <div class="report-card-title report-card-title-major">1. First evaluation vs. calculated analysis</div>
-            <div class="report-card-body" style="font-size:12px;font-weight:700;color:#000;margin-bottom:6px;margin-top:6px">First evaluation</div>
+            <div class="report-card-title report-card-title-major">${t.title1}</div>
+            <div class="report-card-body" style="font-size:12px;font-weight:700;color:#000;margin-bottom:6px;margin-top:6px">${t.firstEval}</div>
             <div class="report-stat-row">
               <div class="report-stat-box">
                 <div class="report-stat-name">${nA}</div>
@@ -2397,7 +2509,7 @@
               <div class="res-bar-fe-b" style="width:${feB}%">${feB >= 8 ? `<span class="res-bar-label">${feB}%</span>` : ''}</div>
             </div>
 
-            <div class="report-card-body" style="font-size:12px;font-weight:700;color:#000;margin-bottom:6px;margin-top:16px">Calculated analysis</div>
+            <div class="report-card-body" style="font-size:12px;font-weight:700;color:#000;margin-bottom:6px;margin-top:16px">${t.calcAnalysis}</div>
             <div class="report-stat-row">
               <div class="report-stat-box">
                 <div class="report-stat-name">${nA}</div>
@@ -2416,51 +2528,52 @@
           </div>
 
           <div class="report-card">
-            <div class="report-card-title report-card-title-major">2. Detailed analysis by factor</div>
+            <div class="report-card-title report-card-title-major">${t.title2}</div>
             <table class="factor-table">
-              <thead><tr><th>Factor</th><th>Weight</th><th>${nA}</th><th>${nB}</th></tr></thead>
+              <thead><tr><th>${t.factorCol}</th><th>${t.weightCol}</th><th>${nA}</th><th>${nB}</th></tr></thead>
               <tbody>${factorTableRows}</tbody>
             </table>
           </div>
 
           <div class="report-card report-card-intro">
-            <div class="report-card-title report-card-title-major">3. Action plan</div>
-            <div class="report-card-body">What did you learn from this analysis? What's your <strong>takeaway</strong> on the balance of power? Is your <strong>team aligned</strong> with this reading? What <strong>actions</strong> can you take?</div>
+            <div class="report-card-title report-card-title-major">${t.title3}</div>
+            <div class="report-card-body">${mdToHtml(t.reflectionQ)}</div>
           </div>
 
           <div class="report-card">
-            <div class="report-card-title">A. Alignment</div>
-            <div class="report-card-body">Share this analysis with your team — line manager, marketing, supply, finance, whoever is involved in this deal. Do they agree with the factors chosen? The same weighting? The same read on how each one splits between ${nA} and ${nB}?</div>
+            <div class="report-card-title">${t.titleA}</div>
+            <div class="report-card-body">${mdToHtml(alignmentText)}</div>
           </div>
 
           <div class="report-card">
-            <div class="report-card-title">B. Reinforce your strengths</div>
+            <div class="report-card-title">${t.titleB}</div>
             <div class="report-factors-list" style="margin-bottom:10px">${strengthsList}</div>
-            <div class="report-card-body">You've listed the strengths above. What can your organization do to <strong>lock these strengths</strong> in? Could you gain another 5%? 10%? or more? What can you — or your organization — do <strong>to develop them</strong> further?</div>
+            <div class="report-card-body">${mdToHtml(t.reinforceText)}</div>
           </div>
 
           <div class="report-card">
-            <div class="report-card-title">C. Use your strengths</div>
-            <div class="report-card-body">Among these strengths, which ones would it be wise to <strong>show the other side</strong>? For example, showing the strength of your BATNA, your team's alignment, your initiative, and a positive relationship history can work in your favor during the negotiation. On the other hand, it may be <strong>wiser to keep</strong> the quality of your preparation and your information under wraps.</div>
+            <div class="report-card-title">${t.titleC}</div>
+            <div class="report-card-body">${mdToHtml(t.useStrengthsText)}</div>
           </div>
 
           <div class="report-card action-card-immediate">
-            <div class="report-card-title">D. Circle of control — short term</div>
-            <div class="report-card-body">The circle of control brings together everything you can <strong>act on directly</strong>, through your own decisions and actions.<br><br><strong>Questions to go further:</strong> What depends on you? Which factors do you have a hand in? Many power factors are directly actionable: preparation, aligning your team around a shared plan, taking initiative, training your team, the quality of your information. What short-term actions can you take to shift these factors in your favor? How can you measure the results of your actions?</div>
+            <div class="report-card-title">${t.titleD}</div>
+            <div class="report-card-body">${mdToHtml(t.controlIntro)}</div>
           </div>
 
           <div class="report-card action-card-medium">
-            <div class="report-card-title">E. Circle of influence — medium term</div>
-            <div class="report-card-body">The circle of influence brings together elements you can <strong>act on indirectly</strong> — by influencing other people or factors without controlling them outright.<br><br><strong>Questions to go further:</strong> Which factors are not directly in your hands, but that you can influence indirectly over the medium term? The quality of the data, the history and quality of the relationship, deadlines, networks & influence, the weight of brands? What actions can you take? Who do you need to convince? How can you measure the results of your actions?</div>
+            <div class="report-card-title">${t.titleE}</div>
+            <div class="report-card-body">${mdToHtml(t.influenceIntro)}</div>
           </div>
 
           <div class="report-card action-card-longterm">
-            <div class="report-card-title">F. Circle of concern — long term</div>
-            <div class="report-card-body">The circle of concern brings together things that matter to you but over which you have <strong>neither control nor influence</strong>.<br><br><strong>Questions to go further:</strong> What factors are outside your control? For example, the law, market growth, and other macro factors affecting the deal. Are they in your favor or against you? Is there any action you can take?</div>
+            <div class="report-card-title">${t.titleF}</div>
+            <div class="report-card-body">${mdToHtml(t.concernIntro)}</div>
           </div>
 
         </div>`;
     }
+
 
     function triggerAI() {
       const nA = document.getElementById('nameA').value || 'Your company';
@@ -2472,14 +2585,15 @@
     }
 
     async function sendReportRequest(nA, nB, sA, sB, feA, feB) {
+      const t = T();
       const btn = document.getElementById('btn-generate');
       btn.disabled = true;
-      btn.textContent = '⏳ Analysing…';
+      btn.textContent = LANG === 'fr' ? '⏳ Analyse en cours…' : '⏳ Analysing…';
 
       const box = document.getElementById('ai-advice');
       box.style.display = 'block';
       box.className = 'ai-box loading';
-      box.textContent = 'Analysing the Balance of power…';
+      box.textContent = LANG === 'fr' ? 'Analyse du rapport de force…' : 'Analysing the Balance of power…';
 
       // Détail facteur par facteur, envoyé au Worker pour construire le prompt côté serveur
       const factorDetails = factors.map(f => {
@@ -2508,7 +2622,7 @@
         const response = await fetch(REPORT_WORKER_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ nA, nB, sA, sB, feA, feB, factorDetails, circleGroups, topStrengths })
+          body: JSON.stringify({ nA, nB, sA, sB, feA, feB, factorDetails, circleGroups, topStrengths, lang: LANG })
         });
 
         const rawText = await response.text();
@@ -2529,14 +2643,16 @@
         // sans dépendre d'une capture d'écran fragile de la mise en page stylée.
         lastReport = { data: data.reportData, nA, nB, feA, feB, sA, sB, factorDetails: sortedFactorDetails, circleGroups, topStrengths };
         document.getElementById('btn-download-pdf').style.display = 'inline-block';
+        document.getElementById('pdf-popup-notice').style.display = 'block';
 
       } catch (err) {
         box.className = 'ai-box error';
         box.innerHTML = `⚠ Could not load analysis: <em>${err.message}</em>`;
         document.getElementById('btn-download-pdf').style.display = 'none';
+        document.getElementById('pdf-popup-notice').style.display = 'none';
       } finally {
         btn.disabled = false;
-        btn.innerHTML = '✦ Regenerate analysis';
+        btn.innerHTML = t.regenerateBtn;
       }
     }
 
@@ -2601,8 +2717,9 @@
       const DARK = [19, 33, 60], MID = [124, 144, 174], GREEN = [30, 138, 76];
 
       const { data, nA, nB, feA, feB, sA, sB, factorDetails, topStrengths } = lastReport;
+      const t = T();
       const preparedBy = (document.getElementById('preparedByName').value || '').trim();
-      const today = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+      const today = new Date().toLocaleDateString(LANG === 'fr' ? 'fr-FR' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
       let y = TOP_Y;
 
@@ -2629,7 +2746,7 @@
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(17);
         doc.setTextColor(...DARK);
-        doc.text('Negotiation Balance of Power', PAGE_W / 2, y, { align: 'center' });
+        doc.text(t.title, PAGE_W / 2, y, { align: 'center' });
         y += 12;
 
         // "Prepared for" et "Assessing between" sur la même ligne.
@@ -2640,8 +2757,8 @@
         doc.setFontSize(10);
         doc.setTextColor(...MID);
         let x = MARGIN;
-        doc.text('Prepared for:', x, y);
-        x += doc.getTextWidth('Prepared for:') + 2;
+        doc.text(t.preparedFor + ':', x, y);
+        x += doc.getTextWidth(t.preparedFor + ':') + 2;
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(...DARK);
         doc.text(preparedBy || 'Not specified', x, y);
@@ -2649,17 +2766,17 @@
 
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(...MID);
-        doc.text('Assessing the balance of power between:', x, y);
-        x += doc.getTextWidth('Assessing the balance of power between:') + 2;
+        doc.text(t.assessingBetween + ':', x, y);
+        x += doc.getTextWidth(t.assessingBetween + ':') + 2;
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(...DARK);
-        doc.text(`${nA} and ${nB}`, x, y);
+        doc.text(`${nA} ${LANG === 'fr' ? 'et' : 'and'} ${nB}`, x, y);
         y += 6;
 
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(9);
         doc.setTextColor(...MID);
-        doc.text('This exercise takes about 15 minutes', MARGIN, y);
+        doc.text(t.fifteenMin.replace('⏱ ', ''), MARGIN, y);
         y += 8;
 
         // Image balance/seesaw — récupérée directement depuis l'outil. Cette
@@ -2677,7 +2794,7 @@
           }
         } catch (e) { /* si l'image échoue, on continue avec le texte seul */ }
 
-        richParagraph("**Balance of power** lies at the **heart of every negotiation**. The side that holds it sets the process and dictates the terms. Yet despite this critical stake, most negotiators **don't take the time to assess** the **Balance of power** — let alone understand how to shift it in their favor.\n\n**Misjudging** the balance of power can put you at a disadvantage before the negotiation even begins.\n**- Lack of confidence:** Give the other side too much power, and you may negotiate from a position of unnecessary weakness making concessions too early, accepting unfavorable terms, or limiting your own room to maneuver.\n**- High confidence:** Underestimate the other side, and you may walk into the negotiation overconfident, insufficient preparation, opening too extreme, not understanding their alternatives or failing to identify their BATNA.\n\nThe risk is not simply being wrong about who has more power. It is allowing a **distorted perception** of power to shape your strategy, your concessions, and ultimately the outcome. This tool helps you **close that gap**. Follow the guided process and receive your personalized report at the end of the exercise.");
+        richParagraph(t.intro1 + "\n\n" + t.intro2 + "\n\n" + t.intro3);
       }
 
       function newPage() {
@@ -2894,8 +3011,8 @@
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(9.5);
         doc.setTextColor(0, 0, 0);
-        doc.text('Factor', xName, y);
-        doc.text('Weight', xWeight, y);
+        doc.text(t.factorCol, xName, y);
+        doc.text(t.weightCol, xWeight, y);
         fitHeaderText(nA, pctW - 2);
         doc.text(nA, xPctA + pctW, y, { align: 'right' });
         fitHeaderText(nB, pctW - 2);
@@ -2976,50 +3093,50 @@
       addCoverPage();
 
       y += 6;
-      majorSectionTitle('1. First evaluation vs. calculated analysis');
-      paragraph('First evaluation', { bold: true, size: 9.5, color: [0, 0, 0], after: 1 });
+      majorSectionTitle(t.title1);
+      paragraph(t.firstEval, { bold: true, size: 9.5, color: [0, 0, 0], after: 1 });
       statBoxes(nA, feA, nB, feB);
       y += 4;
-      paragraph('Calculated analysis', { bold: true, size: 9.5, color: [0, 0, 0], after: 1 });
+      paragraph(t.calcAnalysis, { bold: true, size: 9.5, color: [0, 0, 0], after: 1 });
       statBoxes(nA, sA, nB, sB);
       const diff = Math.abs(sA - sB);
-      const verdict = diff < 5 ? 'The balance of power is **roughly equal**.'
-        : sA > sB ? `**${nA} holds a power advantage (${sA}% vs ${sB}%).**`
-          : `**${nB} holds a power advantage (${sB}% vs ${sA}%).**`;
+      const verdict = diff < 5 ? t.roughlyEqual
+        : sA > sB ? t.advantageVerdict(nA, sA, sB)
+          : t.advantageVerdict(nB, sB, sA);
       y += 4;
       richParagraph(verdict, { color: [0, 0, 0] });
 
       // Saut de page forcé : la page 1 s'arrête ici, "2. Detailed analysis by
       // factor" démarre toujours en haut de la page 2.
       newPage();
-      majorSectionTitle('2. Detailed analysis by factor');
+      majorSectionTitle(t.title2);
       factorTable(factorDetails);
 
       // Page suivante : plan d'action, sous forme de questions/réponses puis des 3 cercles
       newPage();
-      majorSectionTitle('3. Action plan');
-      richParagraph("What did you learn from this analysis? What's your **takeaway** on the balance of power? Is your **team aligned** with this reading? What **actions** can you take?", { color: [0, 0, 0] });
+      majorSectionTitle(t.title3);
+      richParagraph(t.reflectionQ, { color: [0, 0, 0] });
 
-      sectionTitle('A. Alignment');
-      paragraph(`Share this analysis with your team — line manager, marketing, supply, finance, whoever is involved in this deal. Do they agree with the factors chosen? The same weighting? The same read on how each one splits between ${nA} and ${nB}?`);
+      sectionTitle(t.titleA);
+      paragraph(t.alignmentText.replace('{A}', nA).replace('{B}', nB));
 
-      sectionTitle('B. Reinforce your strengths');
+      sectionTitle(t.titleB);
       if (topStrengths && topStrengths.length) {
         paragraph(topStrengths.map(f => `${f.name} (${f.a}%)`).join('  ·  '), { bold: true, size: 9, color: DARK, after: 2 });
       }
-      richParagraph("You've listed the strengths above. What can your organization do to **lock these strengths** in? Could you gain another 5%? 10%? or more? What can you — or your organization — do **to develop them** further?");
+      richParagraph(t.reinforceText);
 
-      sectionTitle('C. Use your strengths');
-      richParagraph("Among these strengths, which ones would it be wise to **show the other side**? For example, showing the strength of your BATNA, your team's alignment, your initiative, and a positive relationship history can work in your favor during the negotiation. On the other hand, it may be **wiser to keep** the quality of your preparation and your information under wraps.");
+      sectionTitle(t.titleC);
+      richParagraph(t.useStrengthsText);
 
-      sectionTitle('D. Circle of control — short term');
-      richParagraph("The circle of control brings together everything you can **act on directly**, through your own decisions and actions.\n\n**Questions to go further:** What depends on you? Which factors do you have a hand in? Many power factors are directly actionable: preparation, aligning your team around a shared plan, taking initiative, training your team, the quality of your information. What short-term actions can you take to shift these factors in your favor? How can you measure the results of your actions?", { color: [0, 0, 0], after: 4 });
+      sectionTitle(t.titleD);
+      richParagraph(t.controlIntro, { color: [0, 0, 0], after: 4 });
 
-      sectionTitle('E. Circle of influence — medium term');
-      richParagraph("The circle of influence brings together elements you can **act on indirectly** — by influencing other people or factors without controlling them outright.\n\n**Questions to go further:** Which factors are not directly in your hands, but that you can influence indirectly over the medium term? The quality of the data, the history and quality of the relationship, deadlines, networks & influence, the weight of brands? What actions can you take? Who do you need to convince? How can you measure the results of your actions?", { color: [0, 0, 0], after: 4 });
+      sectionTitle(t.titleE);
+      richParagraph(t.influenceIntro, { color: [0, 0, 0], after: 4 });
 
-      sectionTitle('F. Circle of concern — long term');
-      richParagraph("The circle of concern brings together things that matter to you but over which you have **neither control nor influence**.\n\n**Questions to go further:** What factors are outside your control? For example, the law, market growth, and other macro factors affecting the deal. Are they in your favor or against you? Is there any action you can take?", { color: [0, 0, 0], after: 4 });
+      sectionTitle(t.titleF);
+      richParagraph(t.concernIntro, { color: [0, 0, 0], after: 4 });
 
       // ---- Pied de page sur chaque page : préparé par / date à gauche, numéro à droite ----
       const totalPages = doc.internal.getNumberOfPages();
@@ -3031,7 +3148,7 @@
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(8);
         doc.setTextColor(...MID);
-        const leftText = preparedBy ? `Prepared for ${preparedBy} — ${today}` : today;
+        const leftText = preparedBy ? `${t.preparedFor} ${preparedBy} — ${today}` : today;
         doc.text(leftText, MARGIN, PAGE_H - 8);
         doc.text(`Page ${p}`, PAGE_W - MARGIN, PAGE_H - 8, { align: 'right' });
       }
@@ -3054,6 +3171,7 @@
        ========================================================================= */
     renderFactors(); // dessine la liste des facteurs par défaut
     updateLive();    // affiche le score initial (50% / 50%)
+    applyLanguage(); // applique la langue par défaut (EN) aux textes statiques
   </script>
 
 
