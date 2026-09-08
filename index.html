@@ -1902,8 +1902,10 @@
           <input type="text" id="preparedByName" placeholder="Your first and last name">
         </div>
         <button class="btn-generate" id="btn-generate" onclick="triggerAI()">✦ Generate analysis</button>
-        <button class="btn" id="btn-download-pdf" onclick="downloadReportPDF()" style="display:none;margin-top:8px">⬇ Download as PDF</button>
-        <div id="pdf-popup-notice" style="display:none;margin-top:6px;font-size:12px;color:var(--color-mid-1)">Make sure pop-ups are enabled for this site so the report can download.</div>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:8px">
+          <button class="btn" id="btn-download-pdf" onclick="downloadReportPDF()" style="display:none;margin:0">⬇ Download as PDF</button>
+          <div id="pdf-popup-notice" style="display:none;font-size:12px;color:var(--color-mid-1)">Make sure pop-ups are enabled for this site so the report can download.</div>
+        </div>
         <div id="ai-advice" style="display:none"></div>
       </div>
 
