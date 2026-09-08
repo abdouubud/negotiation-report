@@ -1847,10 +1847,11 @@
     <div class="step" id="step3">
 
       <!-- 1) Comparaison "première évaluation" (Step 2) vs "analyse calculée" (Step 3) -->
-      <div class="section-title" style="margin-top:0">First evaluation vs. calculated analysis</div>
+      <div class="section-title" id="lbl-eval-vs-calc" style="margin-top:0">First evaluation vs. calculated analysis</div>
 
       <!-- 1a) Score issu du ressenti initial (curseur unique de Step 2) -->
       <p
+        id="lbl-first-eval"
         style="font-size:12px;color:var(--color-mid-1);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">
         First evaluation</p>
       <div class="score-cards">
@@ -1867,6 +1868,7 @@
 
       <!-- 2) Scores finaux calculés -->
       <p
+        id="lbl-calc-analysis"
         style="font-size:12px;color:var(--color-mid-1);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">
         Calculated analysis</p>
       <div class="score-cards">
@@ -1885,18 +1887,18 @@
       <div class="verdict" id="verdict"></div>
 
       <!-- 4) Tableau détaillé : qui est avantagé, facteur par facteur -->
-      <div class="section-title">Breakdown by factor</div>
+      <div class="section-title" id="lbl-breakdown">Breakdown by factor</div>
       <div class="brow brow-header">
-        <div>Factor</div>
+        <div id="lbl-col-factor">Factor</div>
         <div style="text-align:center" id="h-a">A</div>
         <div style="text-align:center" id="h-b">B</div>
-        <div style="text-align:center">Edge</div>
+        <div style="text-align:center" id="lbl-col-edge">Edge</div>
       </div>
       <div id="breakdown"></div>
 
       <!-- 5) Analyse IA & recommandations -->
       <div class="ai-section">
-        <div class="ai-section-title">Analysis &amp; Recommendations</div>
+        <div class="ai-section-title" id="lbl-ai-section">Analysis &amp; Recommendations</div>
         <div class="ai-key-row">
           <span class="ai-key-label" id="prepared-for-label">Prepared for</span>
           <input type="text" id="preparedByName" placeholder="Your first and last name">
@@ -1910,9 +1912,9 @@
       </div>
 
       <div class="nav nav-left" style="margin-top:1.5rem">
-        <button class="btn" onclick="goBack()">← Edit</button>
+        <button class="btn" id="btn-edit" onclick="goBack()">← Edit</button>
       </div>
-      <div class="page-num">Page 3 / 3</div>
+      <div class="page-num" id="lbl-page3">Page 3 / 3</div>
     </div>
 
   </div>
@@ -1965,6 +1967,13 @@
         contactUs: 'Contact us at wenego.fr',
         newFactorPlaceholder: 'New factor name (e.g. Public visibility)',
         addFactorBtn: '+ Add a factor',
+        evalVsCalc: 'First evaluation vs. calculated analysis',
+        breakdownTitle: 'Breakdown by factor',
+        colEdge: 'Edge',
+        aiSectionTitle: 'Analysis &amp; Recommendations',
+        preparedByPlaceholder: 'Your first and last name',
+        btnEdit: '← Edit',
+        page3Label: 'Page 3 / 3',
         step1Label: 'Step 1 — Name the parties',
         step1Q: 'What are the two parties involved in this negotiation?',
         nameAPlaceholder: 'Your company',
@@ -2023,6 +2032,13 @@
         contactUs: 'Contactez-nous sur wenego.fr',
         newFactorPlaceholder: 'Nom du nouveau facteur (ex. Visibilité publique)',
         addFactorBtn: '+ Ajouter un facteur',
+        evalVsCalc: 'Première évaluation vs. analyse calculée',
+        breakdownTitle: 'Détail par facteur',
+        colEdge: 'Avantage',
+        aiSectionTitle: 'Analyse &amp; Recommandations',
+        preparedByPlaceholder: 'Votre prénom et nom',
+        btnEdit: '← Modifier',
+        page3Label: 'Page 3 / 3',
         step1Label: 'Étape 1 — Nommez les parties',
         step1Q: 'Quelles sont les deux parties impliquées dans cette négociation ?',
         nameAPlaceholder: 'Votre entreprise',
@@ -2144,6 +2160,19 @@
       if (newFactorName) newFactorName.placeholder = t.newFactorPlaceholder;
       setText('btn-add-factor-quick', t.addFactorBtn);
       setText('btn-add-factor', t.addFactorBtn);
+
+      // Page 3 (résultats) : titres, en-têtes de tableau, section IA, bouton retour
+      setText('lbl-eval-vs-calc', t.evalVsCalc);
+      setText('lbl-first-eval', t.firstEval);
+      setText('lbl-calc-analysis', t.calcAnalysis);
+      setText('lbl-breakdown', t.breakdownTitle);
+      setText('lbl-col-factor', t.factorCol);
+      setText('lbl-col-edge', t.colEdge);
+      setHtmlAfterStrong('lbl-ai-section', t.aiSectionTitle);
+      const preparedByInput = document.getElementById('preparedByName');
+      if (preparedByInput) preparedByInput.placeholder = t.preparedByPlaceholder;
+      setText('btn-edit', t.btnEdit);
+      setText('lbl-page3', t.page3Label);
     }
 
     function setLang(lang) {
