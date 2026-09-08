@@ -1153,7 +1153,6 @@
                 variable or function.
          =================================================================== -->
 
-      <p id="txt-step3-intro2" style="font-size:14px;color:var(--color-dark-2);line-height:1.6;margin-bottom:1rem">In our view, the balance of power in a negotiation comes down to five things: the leverage each side holds through their alternatives and how much they depend on the deal, how well-prepared and informed each side is going in, the strength and internal alignment of the people at the table, the relationships, reputation, and legal context surrounding the deal, and situational pressures like time and who takes the initiative. Here are the factors of power that we propose:</p>
 
       <p id="txt-step3-abc" style="font-size:14px;color:var(--color-dark-1);margin-bottom:1rem"><strong>A.</strong> Select the factors that
         impact the balance of power.<br><strong>B.</strong> For each factor, select the importance of that factor: it
@@ -1343,7 +1342,7 @@
           <option value="low">Low</option>
         </select>
       </div>
-      <button class="btn-add" onclick="addFactorFromQuickCards()">+ Add a factor</button>
+      <button class="btn-add" id="btn-add-factor-quick" onclick="addFactorFromQuickCards()">+ Add a factor</button>
 
       <div class="factor-definitions">
         <div class="factor-def-item" data-factor="Preparation">
@@ -1831,7 +1830,7 @@
           <option value="low">Low</option>
         </select>
       </div>
-      <button class="btn-add" onclick="addFactor()">+ Add a factor</button>
+      <button class="btn-add" id="btn-add-factor" onclick="addFactor()">+ Add a factor</button>
 
       <div class="nav nav-split">
         <button class="btn" id="btn-back" onclick="goBackToStep1()">← Back</button>
@@ -1961,6 +1960,9 @@
         regenerateBtn: '✦ Regenerate analysis',
         downloadBtn: '⬇ Download as PDF',
         popupNotice: 'Make sure pop-ups are enabled for this site so the report can download.',
+        contactUs: 'Contact us at wenego.fr',
+        newFactorPlaceholder: 'New factor name (e.g. Public visibility)',
+        addFactorBtn: '+ Add a factor',
         step1Label: 'Step 1 — Name the parties',
         step1Q: 'What are the two parties involved in this negotiation?',
         nameAPlaceholder: 'Your company',
@@ -1973,8 +1975,7 @@
         partyADefault: 'Party A',
         partyBDefault: 'Party B',
         step3Label: 'Step 3 — Balance of Power Analysis',
-        step3Intro1: "Following the initial subjective assessment, you will conduct a second, more analytical assessment by breaking down the balance of power into the different factors. Here are the suggested factors of power, and actions to take:",
-        step3Intro2: "In our view, the balance of power in a negotiation comes down to five things: the leverage each side holds through their alternatives and how much they depend on the deal, how well-prepared and informed each side is going in, the strength and internal alignment of the people at the table, the relationships, reputation, and legal context surrounding the deal, and situational pressures like time and who takes the initiative. Here are the factors of power that we propose:",
+        step3Intro1: "Following the initial subjective assessment, you will conduct a second, more analytical assessment by **breaking down** the balance of power into the **different factors**. Here are the suggested factors of power, and actions to take:",
         step3ABC: "<strong>A.</strong> Select the factors that impact the balance of power.<br><strong>B.</strong> For each factor, select the importance of that factor: it can be Critical, Strong, Medium, or Low.<br><strong>C.</strong> Include any additional necessary factor.",
         step3Since: "Since we have the list of factors ready, let's see which of the parties is stronger.",
         step3D: "<strong>D.</strong> Drag the orange handle on each slider. Party A is always shown on the left, Party B on the right.",
@@ -2017,6 +2018,9 @@
         regenerateBtn: "✦ Régénérer l'analyse",
         downloadBtn: '⬇ Télécharger en PDF',
         popupNotice: 'Assurez-vous que les pop-ups sont autorisés pour ce site afin de pouvoir télécharger le rapport.',
+        contactUs: 'Contactez-nous sur wenego.fr',
+        newFactorPlaceholder: 'Nom du nouveau facteur (ex. Visibilité publique)',
+        addFactorBtn: '+ Ajouter un facteur',
         step1Label: 'Étape 1 — Nommez les parties',
         step1Q: 'Quelles sont les deux parties impliquées dans cette négociation ?',
         nameAPlaceholder: 'Votre entreprise',
@@ -2029,8 +2033,7 @@
         partyADefault: 'Partie A',
         partyBDefault: 'Partie B',
         step3Label: 'Étape 3 — Analyse du rapport de force',
-        step3Intro1: "Après cette première évaluation subjective, vous allez mener une seconde évaluation, plus analytique, en décomposant le rapport de force en différents facteurs. Voici les facteurs de pouvoir proposés, et les actions à mener :",
-        step3Intro2: "Selon nous, le rapport de force dans une négociation repose sur cinq éléments : le levier que détient chaque camp via ses alternatives et sa dépendance au deal, le niveau de préparation et d'information de chaque côté, la solidité et l'alignement interne des équipes à la table, les relations, la réputation et le contexte légal entourant le deal, et enfin les pressions conjoncturelles comme le temps et la prise d'initiative. Voici les facteurs de pouvoir que nous proposons :",
+        step3Intro1: "Après cette première évaluation subjective, vous allez mener une seconde évaluation, plus analytique, en **décomposant** le rapport de force en **différents facteurs**. Voici les facteurs de pouvoir proposés, et les actions à mener :",
         step3ABC: "<strong>A.</strong> Sélectionnez les facteurs qui influencent le rapport de force.<br><strong>B.</strong> Pour chaque facteur, choisissez son niveau d'importance : Critique, Fort, Moyen, ou Faible.<br><strong>C.</strong> Ajoutez tout facteur supplémentaire nécessaire.",
         step3Since: "Maintenant que la liste des facteurs est prête, voyons quelle partie est la plus forte.",
         step3D: "<strong>D.</strong> Faites glisser le curseur orange sur chaque ligne. La partie A est toujours affichée à gauche, la partie B à droite.",
@@ -2095,8 +2098,7 @@
       const step3Html = `<strong>${t.step3Label.split(' — ')[0]}</strong> — ${t.step3Label.split(' — ')[1]}`;
       if (lbl3a) lbl3a.innerHTML = step3Html;
       if (lbl3b) lbl3b.innerHTML = step3Html;
-      setText('txt-step3-intro1', t.step3Intro1);
-      setText('txt-step3-intro2', t.step3Intro2);
+      setHtmlAfterStrong('txt-step3-intro1', mdToHtml(t.step3Intro1));
       setHtmlAfterStrong('txt-step3-abc', t.step3ABC);
       setText('txt-step3-since', t.step3Since);
       setHtmlAfterStrong('txt-step3-d', t.step3D);
@@ -2126,12 +2128,20 @@
       // Les <option> de poids (Critical/Strong/Medium/Low) sont identiques sur
       // toutes les cartes rapides — un seul passage sur toutes les <option> du
       // document suffit, en se basant sur leur value ("critical", "strong"...).
-      document.querySelectorAll('.quick-card-select option, .cat-select option').forEach(opt => {
+      document.querySelectorAll('.quick-card-select option, .cat-select option, #newFactorCatQuick option, #newFactorCat option').forEach(opt => {
         opt.textContent = fCatByValue(opt.value);
       });
       if (typeof renderFactors === 'function' && document.getElementById('factor-area')) {
         renderFactors();
       }
+
+      // Formulaires "Ajouter un facteur" (page 1 et page 2)
+      const newFactorNameQuick = document.getElementById('newFactorNameQuick');
+      const newFactorName = document.getElementById('newFactorName');
+      if (newFactorNameQuick) newFactorNameQuick.placeholder = t.newFactorPlaceholder;
+      if (newFactorName) newFactorName.placeholder = t.newFactorPlaceholder;
+      setText('btn-add-factor-quick', t.addFactorBtn);
+      setText('btn-add-factor', t.addFactorBtn);
     }
 
     function setLang(lang) {
@@ -2541,11 +2551,11 @@
 
     const FACTOR_DETAIL_TEXT_FR = {
       'Preparation': "Votre préparation est-elle solide ? Tous les scénarios ont-ils été envisagés ? Dans quelle mesure l'autre partie est-elle préparée ?",
-      'Information': "Quelle est la solidité de votre qualité de donnée, de votre analyse, de votre reporting, et de votre capacité à transformer l'insight en plan d'action ? La collecte de données est-elle manuelle ou automatique ? Qu'en est-il de l'autre camp ?",
-      'Team': "Quelle est la force des compétences de négociation et de la motivation de l'équipe à conclure le deal ? Quel niveau de séniorité, d'expertise métier et d'influence interne ont-ils ?",
+      'Information': "Quelle est la qualité de vos données, de votre analyse, de votre reporting, et de votre capacité à transformer l'insight en plan d'action ? La collecte de données est-elle manuelle ou automatique ? Qu'en est-il de l'autre camp ?",
+      'Team': "Quelle est la compétence en négociation de l'équipe ? Leur motivation à conclure le deal ? Quel niveau de séniorité, d'expertise métier et d'influence interne ont-ils ?",
       'Alignment': "Dans quelle mesure êtes-vous alignés au sein de votre propre organisation — entre niveaux hiérarchiques et avec les autres départements ? Qu'en est-il de l'autre camp ? Sont-ils alignés derrière leur stratégie et leurs actions ?",
       'BATNA': "Quelle alternative (plan B) avez-vous si aucun accord n'est trouvé ? Quelle alternative l'autre partie a-t-elle ?",
-      'The Law': "Le cadre légal ou réglementaire est-il favorable à votre position ? L'autre camp a-t-il une contrainte de conformité plus forte qui lui laisse plus ou moins de marge pour se retirer ?",
+      'The Law': "Le cadre légal ou réglementaire est-il favorable à votre position ? L'autre camp a-t-il une contrainte de conformité plus forte qui lui laisse plus ou moins de marge en négociation ?",
       'Time': "Quelles pressions temporelles ou échéances sont en jeu ? Quel camp a le plus besoin de conclure rapidement ? Que gagnerait chaque partie à un deal rapide ?",
       'Brands': "Quelle est la force de vos marques ? À quel point les clients les recherchent-ils ? Comment le pouvoir de vos marques influence-t-il le deal ?",
       'Initiative': "Qui prend l'initiative dans le deal ? Qui impose le rythme et les règles du jeu — pourriez-vous répondre à une demande de rendez-vous à 15 jours par « peut-on se voir dans 7 jours » ?",
@@ -2735,6 +2745,8 @@
             <div class="report-card-body">${mdToHtml(t.concernIntro)}</div>
           </div>
 
+          <div style="text-align:center;margin-top:8px;font-size:12px;color:var(--color-mid-1)">${t.contactUs}</div>
+
         </div>`;
     }
 
@@ -2839,7 +2851,7 @@
       'Team': "How strong are the team's negotiation skills and motivation to close the deal? How much seniority, subject-matter knowledge, and internal influence do they have?",
       'Alignment': 'How aligned are you within your own organization — across hierarchical levels and with other departments? What about the other side? Are they aligned behind their strategy and actions?',
       'BATNA': 'What alternative (plan B) do you have if no deal is reached? What alternative does the other side have?',
-      'The Law': 'How favorable is the legal or regulatory framework to your position? Does the other side have a stronger compliance requirement that gives them more or less room to walk away?',
+      'The Law': 'How favorable is the legal or regulatory framework to your position? Does the other side have a stronger compliance requirement that gives them more or less power?',
       'Time': 'What time pressures or deadlines are at play? Who needs this deal to close fastest? What would each party gain from a quick deal?',
       'Brands': 'How strong are your brands? How much do customers want them? How does the power of your brands influence the deal?',
       'Initiative': 'Who takes the initiative in the deal? Who sets the pace and the rules of the game — could you counter a 15-day meeting request with "can we meet in 7 days"?',
@@ -3301,6 +3313,13 @@
 
       sectionTitle(t.titleF);
       richParagraph(t.concernIntro, { color: [0, 0, 0], after: 4 });
+
+      y += 6;
+      ensureSpace(6);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.setTextColor(...MID);
+      doc.text(t.contactUs, PAGE_W / 2, y, { align: 'center' });
 
       // ---- Pied de page sur chaque page : préparé par / date à gauche, numéro à droite ----
       const totalPages = doc.internal.getNumberOfPages();
