@@ -1963,7 +1963,7 @@
         generateBtn: '✦ Generate analysis',
         regenerateBtn: '✦ Regenerate analysis',
         downloadBtn: '⬇ Download as PDF',
-        popupNotice: 'Make sure pop-ups are enabled for this site so the report can download.',
+        popupNotice: 'Enable pop-ups to download',
         contactUs: 'Contact us at wenego.fr',
         newFactorPlaceholder: 'New factor name (e.g. Public visibility)',
         addFactorBtn: '+ Add a factor',
@@ -1974,6 +1974,7 @@
         preparedByPlaceholder: 'Your first and last name',
         btnEdit: '← Edit',
         page3Label: 'Page 3 / 3',
+        equalTag: 'Equal',
         step1Label: 'Step 1 — Name the parties',
         step1Q: 'What are the two parties involved in this negotiation?',
         nameAPlaceholder: 'Your company',
@@ -2028,7 +2029,7 @@
         generateBtn: "✦ Générer l'analyse",
         regenerateBtn: "✦ Régénérer l'analyse",
         downloadBtn: '⬇ Télécharger en PDF',
-        popupNotice: 'Assurez-vous que les pop-ups sont autorisés pour ce site afin de pouvoir télécharger le rapport.',
+        popupNotice: 'Autorisez les pop-ups pour télécharger',
         contactUs: 'Contactez-nous sur wenego.fr',
         newFactorPlaceholder: 'Nom du nouveau facteur (ex. Visibilité publique)',
         addFactorBtn: '+ Ajouter un facteur',
@@ -2039,6 +2040,7 @@
         preparedByPlaceholder: 'Votre prénom et nom',
         btnEdit: '← Modifier',
         page3Label: 'Page 3 / 3',
+        equalTag: 'Égalité',
         step1Label: 'Étape 1 — Nommez les parties',
         step1Q: 'Quelles sont les deux parties impliquées dans cette négociation ?',
         nameAPlaceholder: 'Votre entreprise',
@@ -2173,6 +2175,13 @@
       if (preparedByInput) preparedByInput.placeholder = t.preparedByPlaceholder;
       setText('btn-edit', t.btnEdit);
       setText('lbl-page3', t.page3Label);
+
+      // Si la page de résultats est déjà affichée, on la reconstruit pour que
+      // le tableau de répartition (noms de facteurs, tag "Equal/Égalité")
+      // reflète la nouvelle langue — sans forcer une navigation vers cette page.
+      if (document.getElementById('step3') && document.getElementById('step3').classList.contains('active')) {
+        showResults();
+      }
     }
 
     function setLang(lang) {
@@ -2487,8 +2496,8 @@
         // "Edge" = qui a l'avantage sur ce facteur précis (écart de plus de 10 points)
         const tag = pA - pB > 10 ? `<span class="tag tag-a">${nA}</span>`
           : pB - pA > 10 ? `<span class="tag tag-b">${nB}</span>`
-            : `<span class="tag tag-tie">Equal</span>`;
-        return `<div class="brow"><span>${f.name}</span><span style="text-align:center">${pA}%</span><span style="text-align:center">${pB}%</span>${tag}</div>`;
+            : `<span class="tag tag-tie">${T().equalTag}</span>`;
+        return `<div class="brow"><span>${fName(f.name)}</span><span style="text-align:center">${pA}%</span><span style="text-align:center">${pB}%</span>${tag}</div>`;
       }).join('');
 
       // --- Bascule visuelle : on cache step1, on affiche step2 ---
