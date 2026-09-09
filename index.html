@@ -991,7 +991,44 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px
+      gap: 4px;
+      position: relative
+    }
+
+    .quick-card-remove {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 18px;
+      height: 18px;
+      line-height: 16px;
+      border-radius: 50%;
+      border: 1px solid var(--color-mid-2);
+      background: #fff;
+      color: var(--color-mid-1);
+      font-size: 13px;
+      cursor: pointer;
+      padding: 0
+    }
+
+    .quick-card-remove:hover {
+      background: var(--color-accent-terracotta);
+      border-color: var(--color-accent-terracotta);
+      color: #fff
+    }
+
+    .factor-row-remove {
+      border: none;
+      background: transparent;
+      color: var(--color-mid-1);
+      font-size: 16px;
+      cursor: pointer;
+      padding: 0 2px;
+      margin-left: 6px
+    }
+
+    .factor-row-remove:hover {
+      color: var(--color-accent-terracotta)
     }
 
     .quick-card-icon {
@@ -1187,6 +1224,7 @@
       <div class="quick-cards-section">
         <div class="quick-cards-grid">
           <div class="quick-card" data-factor="Preparation">
+            <button type="button" class="quick-card-remove" onclick="removeFactor('Preparation')" title="Remove">&times;</button>
             <div class="quick-card-icon">📋</div>
             <div class="quick-card-name">Preparation</div>
             <select class="quick-card-select" id="qc-Preparation" onchange="updateCat('Preparation',this.value)">
@@ -1197,6 +1235,7 @@
             </select>
           </div>
           <div class="quick-card" data-factor="Information">
+            <button type="button" class="quick-card-remove" onclick="removeFactor('Information')" title="Remove">&times;</button>
             <div class="quick-card-icon">📊</div>
             <div class="quick-card-name">Information</div>
             <select class="quick-card-select" id="qc-Information" onchange="updateCat('Information',this.value)">
@@ -1207,6 +1246,7 @@
             </select>
           </div>
           <div class="quick-card" data-factor="Team">
+            <button type="button" class="quick-card-remove" onclick="removeFactor('Team')" title="Remove">&times;</button>
             <div class="quick-card-icon">👥</div>
             <div class="quick-card-name">Team</div>
             <select class="quick-card-select" id="qc-Team" onchange="updateCat('Team',this.value)">
@@ -1217,6 +1257,7 @@
             </select>
           </div>
           <div class="quick-card" data-factor="Alignment">
+            <button type="button" class="quick-card-remove" onclick="removeFactor('Alignment')" title="Remove">&times;</button>
             <div class="quick-card-icon">🎯</div>
             <div class="quick-card-name">Alignment</div>
             <select class="quick-card-select" id="qc-Alignment" onchange="updateCat('Alignment',this.value)">
@@ -1227,6 +1268,7 @@
             </select>
           </div>
           <div class="quick-card" data-factor="BATNA">
+            <button type="button" class="quick-card-remove" onclick="removeFactor('BATNA')" title="Remove">&times;</button>
             <div class="quick-card-icon">♟️</div>
             <div class="quick-card-name">BATNA</div>
             <select class="quick-card-select" id="qc-BATNA" onchange="updateCat('BATNA',this.value)">
@@ -1237,6 +1279,7 @@
             </select>
           </div>
           <div class="quick-card" data-factor="The Law">
+            <button type="button" class="quick-card-remove" onclick="removeFactor('The Law')" title="Remove">&times;</button>
             <div class="quick-card-icon">⚖️</div>
             <div class="quick-card-name">The Law</div>
             <select class="quick-card-select" id="qc-The_Law" onchange="updateCat('The Law',this.value)">
@@ -1247,6 +1290,7 @@
             </select>
           </div>
           <div class="quick-card" data-factor="Time">
+            <button type="button" class="quick-card-remove" onclick="removeFactor('Time')" title="Remove">&times;</button>
             <div class="quick-card-icon">⏱️</div>
             <div class="quick-card-name">Time</div>
             <select class="quick-card-select" id="qc-Time" onchange="updateCat('Time',this.value)">
@@ -1257,6 +1301,7 @@
             </select>
           </div>
           <div class="quick-card" data-factor="Brands">
+            <button type="button" class="quick-card-remove" onclick="removeFactor('Brands')" title="Remove">&times;</button>
             <div class="quick-card-icon">🏷️</div>
             <div class="quick-card-name">Brands</div>
             <select class="quick-card-select" id="qc-Brands" onchange="updateCat('Brands',this.value)">
@@ -1267,6 +1312,7 @@
             </select>
           </div>
           <div class="quick-card" data-factor="Initiative">
+            <button type="button" class="quick-card-remove" onclick="removeFactor('Initiative')" title="Remove">&times;</button>
             <div class="quick-card-icon">🚀</div>
             <div class="quick-card-name">Initiative</div>
             <select class="quick-card-select" id="qc-Initiative" onchange="updateCat('Initiative',this.value)">
@@ -1277,6 +1323,7 @@
             </select>
           </div>
           <div class="quick-card" data-factor="Relationship history">
+            <button type="button" class="quick-card-remove" onclick="removeFactor('Relationship history')" title="Remove">&times;</button>
             <div class="quick-card-icon">🤝</div>
             <div class="quick-card-name">Relationship history</div>
             <select class="quick-card-select" id="qc-Relationship_History"
@@ -1288,6 +1335,7 @@
             </select>
           </div>
           <div class="quick-card" data-factor="Networks & Influence">
+            <button type="button" class="quick-card-remove" onclick="removeFactor('Networks & Influence')" title="Remove">&times;</button>
             <div class="quick-card-icon">🌐</div>
             <div class="quick-card-name">Networks &amp; Influence</div>
             <select class="quick-card-select" id="qc-Networks___Influence"
@@ -1299,6 +1347,7 @@
             </select>
           </div>
           <div class="quick-card" data-factor="Conditionality">
+            <button type="button" class="quick-card-remove" onclick="removeFactor('Conditionality')" title="Remove">&times;</button>
             <div class="quick-card-icon">📝</div>
             <div class="quick-card-name">Conditionality</div>
             <select class="quick-card-select" id="qc-Conditionality" onchange="updateCat('Conditionality',this.value)">
@@ -1309,6 +1358,7 @@
             </select>
           </div>
           <div class="quick-card" data-factor="Resources & Expertise">
+            <button type="button" class="quick-card-remove" onclick="removeFactor('Resources & Expertise')" title="Remove">&times;</button>
             <div class="quick-card-icon">🎓</div>
             <div class="quick-card-name">Resources &amp; Expertise</div>
             <select class="quick-card-select" id="qc-Resources___Expertise"
@@ -1320,6 +1370,7 @@
             </select>
           </div>
           <div class="quick-card" data-factor="Dependency">
+            <button type="button" class="quick-card-remove" onclick="removeFactor('Dependency')" title="Remove">&times;</button>
             <div class="quick-card-icon">🔗</div>
             <div class="quick-card-name">Dependency</div>
             <select class="quick-card-select" id="qc-Dependency" onchange="updateCat('Dependency',this.value)">
@@ -1977,6 +2028,7 @@
         page3Label: 'Page 3 / 3',
         equalTag: 'Equal',
         generatingNote: 'Please wait a bit, report generation takes about a minute.',
+        minFactorAlert: 'Keep at least one factor to assess the balance of power.',
         step1Label: 'Step 1 — Name the parties',
         step1Q: 'What are the two parties involved in this negotiation?',
         nameAPlaceholder: 'Your company',
@@ -2044,6 +2096,7 @@
         page3Label: 'Page 3 / 3',
         equalTag: 'Égalité',
         generatingNote: 'Merci de patienter un instant, la génération du rapport prend environ une minute.',
+        minFactorAlert: 'Gardez au moins un facteur pour évaluer le rapport de force.',
         step1Label: 'Étape 1 — Nommez les parties',
         step1Q: 'Quelles sont les deux parties impliquées dans cette négociation ?',
         nameAPlaceholder: 'Votre entreprise',
@@ -2340,6 +2393,26 @@
     // Même logique que addFactor(), mais déclenchée depuis la grille de cartes
     // rapides (page 1) : ajoute le facteur aux données ET crée sa carte visuelle
     // directement dans .quick-cards-grid, sans toucher aux cartes existantes.
+    // Supprime un facteur (par défaut ou ajouté manuellement) de la sélection.
+    // Miroir de addFactor()/addFactorFromQuickCards() : retire l'entrée de
+    // factors[]/sliders[], supprime sa carte rapide (page 1), et rafraîchit
+    // la liste de la page 2 + le score en direct.
+    function removeFactor(name) {
+      if (factors.length <= 1) {
+        alert(T().minFactorAlert);
+        return;
+      }
+      factors = factors.filter(f => f.name !== name);
+      delete sliders[name];
+
+      document.querySelectorAll('.quick-card[data-factor]').forEach(card => {
+        if (card.getAttribute('data-factor') === name) card.remove();
+      });
+
+      renderFactors();
+      updateLive();
+    }
+
     function addFactorFromQuickCards() {
       const nameInput = document.getElementById('newFactorNameQuick');
       const catSelect = document.getElementById('newFactorCatQuick');
@@ -2359,9 +2432,11 @@
       const grid = document.querySelector('.quick-cards-grid');
       const card = document.createElement('div');
       card.className = 'quick-card';
+      card.setAttribute('data-factor', name);
       const safe = safeId(name);
       const esc = name.replace(/'/g, "\\'");
       card.innerHTML =
+        '<button type="button" class="quick-card-remove" onclick="removeFactor(\'' + esc + '\')" title="Remove">&times;</button>' +
         '<div class="quick-card-icon">➕</div>' +
         '<div class="quick-card-name">' + name + '</div>' +
         '<select class="quick-card-select" id="qc-' + safe + '" onchange="updateCat(\'' + esc + '\',this.value)">' +
@@ -2413,6 +2488,7 @@
         <div class="factor-top">
           <span class="factor-name">${fName(f.name)}</span>
           <select class="cat-select" onchange="updateCat('${sn}',this.value)">${opts}</select>
+          <button type="button" class="factor-row-remove" onclick="removeFactor('${sn}')" title="Remove">&times;</button>
         </div>
         <div class="slider-section">
           <div><div class="party-pct" id="pa-${id}">${100 - v}%</div><div class="party-tag">${nA}</div></div>
@@ -2813,7 +2889,9 @@
       const box = document.getElementById('ai-advice');
       box.style.display = 'block';
       box.className = 'ai-box loading';
-      box.textContent = LANG === 'fr' ? 'Analyse du rapport de force…' : 'Analysing the Balance of power…';
+      box.textContent = LANG === 'fr'
+        ? 'Analyse du rapport de force… Cela prend environ 1 minute, merci de patienter.'
+        : 'Analysing the Balance of power… This takes about 1 minute, please wait.';
 
       // Détail facteur par facteur, envoyé au Worker pour construire le prompt côté serveur
       const factorDetails = factors.map(f => {
