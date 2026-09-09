@@ -1904,6 +1904,7 @@
           <input type="text" id="preparedByName" placeholder="Your first and last name">
         </div>
         <button class="btn-generate" id="btn-generate" onclick="triggerAI()">✦ Generate analysis</button>
+        <div id="generating-note" style="margin-top:6px;font-size:12px;color:var(--color-mid-1)">Please wait a bit, report generation takes about a minute.</div>
         <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:8px">
           <button class="btn" id="btn-download-pdf" onclick="downloadReportPDF()" style="display:none;margin:0">⬇ Download as PDF</button>
           <div id="pdf-popup-notice" style="display:none;font-size:12px;color:var(--color-mid-1)">Make sure pop-ups are enabled for this site so the report can download.</div>
@@ -1975,6 +1976,7 @@
         btnEdit: '← Edit',
         page3Label: 'Page 3 / 3',
         equalTag: 'Equal',
+        generatingNote: 'Please wait a bit, report generation takes about a minute.',
         step1Label: 'Step 1 — Name the parties',
         step1Q: 'What are the two parties involved in this negotiation?',
         nameAPlaceholder: 'Your company',
@@ -2041,6 +2043,7 @@
         btnEdit: '← Modifier',
         page3Label: 'Page 3 / 3',
         equalTag: 'Égalité',
+        generatingNote: 'Merci de patienter un instant, la génération du rapport prend environ une minute.',
         step1Label: 'Étape 1 — Nommez les parties',
         step1Q: 'Quelles sont les deux parties impliquées dans cette négociation ?',
         nameAPlaceholder: 'Votre entreprise',
@@ -2089,6 +2092,8 @@
 
       const genBtn = document.getElementById('btn-generate');
       if (genBtn && !genBtn.disabled) genBtn.innerHTML = t.generateBtn;
+      const genNote = document.getElementById('generating-note');
+      if (genNote) genNote.textContent = t.generatingNote;
       const dlBtn = document.getElementById('btn-download-pdf');
       if (dlBtn) dlBtn.textContent = t.downloadBtn;
       const notice = document.getElementById('pdf-popup-notice');
@@ -2699,7 +2704,6 @@
 
           <div class="report-card report-card-intro">
             <div class="report-card-title">📋 Introduction</div>
-            <div class="report-card-body" style="font-size:12px;color:var(--color-mid-1);margin-bottom:6px">${t.fifteenMin}</div>
             <div class="report-card-body">${mdToHtml(t.intro1)}</div>
             <div class="report-card-body" style="margin-top:8px">${mdToHtml(t.intro2)}</div>
             <div class="report-card-body" style="margin-top:8px">${mdToHtml(t.intro3)}</div>
@@ -2987,13 +2991,7 @@
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(...DARK);
         doc.text(`${nA} ${LANG === 'fr' ? 'et' : 'and'} ${nB}`, x, y);
-        y += 6;
-
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(9);
-        doc.setTextColor(...MID);
-        doc.text(t.fifteenMin.replace('⏱ ', ''), MARGIN, y);
-        y += 8;
+        y += 10;
 
         // Image balance/seesaw — récupérée directement depuis l'outil. Cette
         // image est déjà correctement recadrée (panoramique) à la source, on
