@@ -3079,9 +3079,10 @@
           if (heroImgEl && heroImgEl.src) {
             const aspect = (heroImgEl.naturalWidth && heroImgEl.naturalHeight)
               ? heroImgEl.naturalWidth / heroImgEl.naturalHeight : 2.4;
-            const imgW = CONTENT_W, imgH = imgW / aspect; // pleine largeur, comme avant la réduction
-            doc.addImage(heroImgEl.src, 'JPEG', MARGIN, y, imgW, imgH);
-            y += imgH + 10;
+            const imgW = CONTENT_W * 0.62, imgH = imgW / aspect; // réduite pour que la page 1 tienne sur une seule page
+            const imgX = MARGIN + (CONTENT_W - imgW) / 2;
+            doc.addImage(heroImgEl.src, 'JPEG', imgX, y, imgW, imgH);
+            y += imgH + 8;
           }
         } catch (e) { /* si l'image échoue, on continue avec le texte seul */ }
 
