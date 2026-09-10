@@ -2016,7 +2016,7 @@
         regenerateBtn: '✦ Regenerate analysis',
         downloadBtn: '⬇ Download as PDF',
         popupNotice: 'Enable pop-ups to download',
-        contactUs: 'Contact us at wenego.fr',
+        contactUs: 'We hope this report is useful for you to continue the reflection. Contact us at contact@wenego.fr',
         newFactorPlaceholder: 'New factor name (e.g. Public visibility)',
         addFactorBtn: '+ Add a factor',
         evalVsCalc: 'First evaluation vs. calculated analysis',
@@ -2042,7 +2042,7 @@
         partyBDefault: 'Party B',
         step3Label: 'Step 3 — Balance of Power Analysis',
         step3Intro1: "Following the initial subjective assessment, you will conduct a second, more analytical assessment by **breaking down** the balance of power into the **different factors**. Here are the suggested factors of power, and actions to take:",
-        step3ABC: "<strong>A.</strong> Select the factors that impact the balance of power.<br><strong>B.</strong> For each factor, select the importance of that factor: it can be Critical, Strong, Medium, or Low.<br><strong>C.</strong> Include any additional necessary factor.",
+        step3ABC: "<strong>A.</strong> Select the factors that impact the balance of power.<br><strong>B.</strong> For each factor, select the importance of that factor: it can be Critical, Strong, Medium, or Low.<br><strong>C.</strong> Include any additional necessary factor — or remove one if it's not relevant to you by clicking the × on that factor's card.",
         step3Since: "Since we have the list of factors ready, let's see which of the parties is stronger.",
         step3D: "<strong>D.</strong> Drag the orange handle on each slider. Party A is always shown on the left, Party B on the right.",
         btnNext: 'Next →',
@@ -2084,7 +2084,7 @@
         regenerateBtn: "✦ Régénérer l'analyse",
         downloadBtn: '⬇ Télécharger en PDF',
         popupNotice: 'Autorisez les pop-ups pour télécharger',
-        contactUs: 'Contactez-nous sur wenego.fr',
+        contactUs: 'Nous espérons que ce rapport vous sera utile pour poursuivre la réflexion. Contactez-nous à contact@wenego.fr',
         newFactorPlaceholder: 'Nom du nouveau facteur (ex. Visibilité publique)',
         addFactorBtn: '+ Ajouter un facteur',
         evalVsCalc: 'Première évaluation vs. analyse calculée',
@@ -2110,7 +2110,7 @@
         partyBDefault: 'Partie B',
         step3Label: 'Étape 3 — Analyse du rapport de force',
         step3Intro1: "Après cette première évaluation subjective, vous allez mener une seconde évaluation, plus analytique, en **décomposant** le rapport de force en **différents facteurs**. Voici les facteurs de pouvoir proposés, et les actions à mener :",
-        step3ABC: "<strong>A.</strong> Sélectionnez les facteurs qui influencent le rapport de force.<br><strong>B.</strong> Pour chaque facteur, choisissez son niveau d'importance : Critique, Fort, Moyen, ou Faible.<br><strong>C.</strong> Ajoutez tout facteur supplémentaire nécessaire.",
+        step3ABC: "<strong>A.</strong> Sélectionnez les facteurs qui influencent le rapport de force.<br><strong>B.</strong> Pour chaque facteur, choisissez son niveau d'importance : Critique, Fort, Moyen, ou Faible.<br><strong>C.</strong> Ajoutez tout facteur supplémentaire nécessaire — ou supprimez-en un s'il n'est pas pertinent pour vous en cliquant sur le × de sa carte.",
         step3Since: "Maintenant que la liste des facteurs est prête, voyons quelle partie est la plus forte.",
         step3D: "<strong>D.</strong> Faites glisser le curseur orange sur chaque ligne. La partie A est toujours affichée à gauche, la partie B à droite.",
         btnNext: 'Suivant →',
@@ -2488,7 +2488,6 @@
         <div class="factor-top">
           <span class="factor-name">${fName(f.name)}</span>
           <select class="cat-select" onchange="updateCat('${sn}',this.value)">${opts}</select>
-          <button type="button" class="factor-row-remove" onclick="removeFactor('${sn}')" title="Remove">&times;</button>
         </div>
         <div class="slider-section">
           <div><div class="party-pct" id="pa-${id}">${100 - v}%</div><div class="party-tag">${nA}</div></div>
@@ -2865,7 +2864,7 @@
             <div class="report-card-body">${mdToHtml(t.concernIntro)}</div>
           </div>
 
-          <div style="text-align:center;margin-top:8px;font-size:12px;color:var(--color-mid-1)">${t.contactUs}</div>
+          <div style="text-align:center;margin-top:8px;font-size:12px;color:var(--color-mid-1)">${t.contactUs.replace('contact@wenego.fr', '<a href="mailto:contact@wenego.fr" style="color:var(--color-mid-1)">contact@wenego.fr</a>')}</div>
 
         </div>`;
     }
@@ -3431,11 +3430,18 @@
       richParagraph(t.concernIntro, { color: [0, 0, 0], after: 4 });
 
       y += 6;
-      ensureSpace(6);
+      ensureSpace(14);
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(9);
       doc.setTextColor(...MID);
-      doc.text(t.contactUs, PAGE_W / 2, y, { align: 'center' });
+      const contactMsg = t.contactUs.replace('contact@wenego.fr', '').trim();
+      const contactLines = doc.splitTextToSize(contactMsg, CONTENT_W);
+      contactLines.forEach(line => {
+        doc.text(line, PAGE_W / 2, y, { align: 'center' });
+        y += 4.5;
+      });
+      const emailW = doc.getTextWidth('contact@wenego.fr');
+      doc.textWithLink('contact@wenego.fr', PAGE_W / 2 - emailW / 2, y, { url: 'mailto:contact@wenego.fr' });
 
       // ---- Pied de page sur chaque page : préparé par / date à gauche, numéro à droite ----
       const totalPages = doc.internal.getNumberOfPages();
