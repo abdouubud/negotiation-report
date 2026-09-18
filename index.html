@@ -3464,17 +3464,23 @@
       sectionTitle(t.titleF);
       richParagraph(t.concernIntro, { color: [0, 0, 0], after: 4 });
 
-      y += 6;
-      ensureSpace(14);
+      y += 3;
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(9);
       doc.setTextColor(...MID);
       const contactMsg = t.contactUs.replace('contact@wenego.fr', '').trim();
       const contactLines = doc.splitTextToSize(contactMsg, CONTENT_W);
       contactLines.forEach(line => {
+        ensureSpace(4.5);
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9);
+        doc.setTextColor(...MID);
         doc.text(line, PAGE_W / 2, y, { align: 'center' });
         y += 4.5;
       });
+      ensureSpace(4.5);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
       const emailW = doc.getTextWidth('contact@wenego.fr');
       doc.textWithLink('contact@wenego.fr', PAGE_W / 2 - emailW / 2, y, { url: 'mailto:contact@wenego.fr' });
 
